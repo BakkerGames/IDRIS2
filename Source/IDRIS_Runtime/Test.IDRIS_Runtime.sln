@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.IDRIS_Runtime", "Test.IDRIS_Runtime\Test.IDRIS_Runtime.csproj", "{61E55C2B-308F-47F5-8322-5B40CB817227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDRIS_Runtime", "IDRIS_Runtime\IDRIS_Runtime.csproj", "{0E8B17CA-6E83-4F3A-8093-14FAB72F5F99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61E55C2B-308F-47F5-8322-5B40CB817227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61E55C2B-308F-47F5-8322-5B40CB817227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61E55C2B-308F-47F5-8322-5B40CB817227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61E55C2B-308F-47F5-8322-5B40CB817227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E8B17CA-6E83-4F3A-8093-14FAB72F5F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E8B17CA-6E83-4F3A-8093-14FAB72F5F99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E8B17CA-6E83-4F3A-8093-14FAB72F5F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E8B17CA-6E83-4F3A-8093-14FAB72F5F99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B6D3ADBF-F9B0-4A03-93B6-39A04ABDA6D2}
+	EndGlobalSection
+EndGlobal

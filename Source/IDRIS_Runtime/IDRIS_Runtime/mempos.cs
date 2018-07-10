@@ -1,4 +1,4 @@
-﻿// mempos.cs - 07/09/2018
+﻿// mempos.cs - 07/10/2018
 
 using System;
 
@@ -52,7 +52,6 @@ namespace IDRIS_Runtime
         // ---    Channel path is stored in ChannelPaths().     ---
         // --------------------------------------------------------
 
-
         // --- Table Starting Positions ---
 
         public const int filetable = 9 * 256;
@@ -63,7 +62,8 @@ namespace IDRIS_Runtime
         public const int chantable = 53 * 256;
         public const int numhigh = 55 * 256;
         public const int highalpha = 56 * 256;
-        public const int totalmemsize = 59 * 256;
+        public const int totalpagecount = 59;
+        public const int totalmemsize = totalpagecount * 256;
 
         // --- Table Record Sizes ---
 
@@ -424,6 +424,5 @@ namespace IDRIS_Runtime
         public const int t = 12 * 256; //  x0c00
         public const int u = 13 * 256; //  x0d00
         public const int v = 14 * 256; //  x0e00
-
     }
 }

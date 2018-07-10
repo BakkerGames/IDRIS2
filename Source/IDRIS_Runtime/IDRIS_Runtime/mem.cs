@@ -1,19 +1,19 @@
-﻿// mem.cs - 07/09/2018
+﻿// mem.cs - 07/10/2018
 
 using System;
+using System.Text;
 
 namespace IDRIS_Runtime
 {
     public static partial class mem
     {
-        // --- Memory block ---
-
         private static byte[] _mem = new byte[mempos.totalmemsize];
 
         public static long sizemax(long size)
         {
             switch (size)
             {
+                case 0: return 1L;
                 case 1: return 256L;
                 case 2: return 65536L;
                 case 3: return 16777216L;
@@ -28,6 +28,7 @@ namespace IDRIS_Runtime
         {
             switch (size)
             {
+                case 0: return 1L;
                 case 1: return 128L;
                 case 2: return 32768L;
                 case 3: return 8388608L;
@@ -38,16 +39,30 @@ namespace IDRIS_Runtime
             throw new ArgumentOutOfRangeException($"halfsizemax({size})");
         }
 
+        public static long getbyte(long pos)
+        {
+            if (pos < 0 || pos >= mempos.totalmemsize)
+            {
+                throw new ArgumentOutOfRangeException($"getbyte({pos})");
+            }
+            long result = _mem[pos];
+            if (result < 0)
+            {
+                result += sizemax(1);
+            }
+            return result;
+        }
+
         public static long getnum(long pos, long size)
         {
-            if (pos < 0 || pos + size >= mempos.totalmemsize || size < 1 || size > mempos.numslotsize)
+            if (pos < 0 || pos + size - 1 >= mempos.totalmemsize || size < 1 || size > mempos.numslotsize)
             {
                 throw new ArgumentOutOfRangeException($"getnum({pos},{size})");
             }
             long result = _mem[pos];
             for (long i = 1; i < size; i++)
             {
-                result = (result * 256) + _mem[pos + i];
+                result = (result * sizemax(1)) + _mem[pos + i];
             }
             if (result >= halfsizemax(size))
             {
@@ -56,49 +71,78 @@ namespace IDRIS_Runtime
             return result;
         }
 
-        public static void setnum(long pos, long size, long value)
+        public static void setbyte(long pos, long value)
         {
-            if (pos < 0 || pos + size >= mempos.totalmemsize || size < 1 || size > mempos.numslotsize)
+            if (pos < 0 || pos >= mempos.totalmemsize)
             {
-                throw new ArgumentOutOfRangeException($"setnum({pos},{size})");
+                throw new ArgumentOutOfRangeException($"setbyte({pos})");
             }
-            long tempValue = value;
-            if (size == 1)
+            if (value < -sizemax(1) || value > sizemax(1))
             {
-                if (tempValue < -sizemax(1) || tempValue > sizemax(1))
+                if ((_mem[mempos.privg] & 2) == 0) // not set
                 {
-                    if ((_mem[mempos.privg] & 2) == 0) // not set
-                    {
-                        throw new ArgumentOutOfRangeException($"setnum({pos},{size},{tempValue})");
-                    }
+                    throw new ArgumentOutOfRangeException($"setbyte({pos},{value})");
                 }
-                if (tempValue < 0 || tempValue >= sizemax(1))
-                {
-                    tempValue = tempValue % sizemax(1);
-                }
-                _mem[pos] = (byte)tempValue;
+            }
+            if (value < 0 || value >= sizemax(1))
+            {
+                _mem[pos] = (byte)(value % sizemax(1));
             }
             else
             {
-                if (tempValue < -halfsizemax(size) || tempValue >= halfsizemax(size))
+                _mem[pos] = (byte)value;
+            }
+        }
+
+        public static void setnum(long pos, long size, long value)
+        {
+            if (pos < 0 || pos + size - 1 >= mempos.totalmemsize || size < 1 || size > mempos.numslotsize)
+            {
+                throw new ArgumentOutOfRangeException($"setnum({pos},{size})");
+            }
+            if (value < -halfsizemax(size) || value >= halfsizemax(size))
+            {
+                if ((_mem[mempos.privg] & 2) == 0) // not set
                 {
-                    if ((_mem[mempos.privg] & 2) == 0) // not set
+                    throw new ArgumentOutOfRangeException($"setnum({pos},{size},{value})");
+                }
+                value -= (value / sizemax(size)) * sizemax(size);
+            }
+            else if (value < 0)
+            {
+                value += sizemax(size);
+            }
+            for (int i = 0; i < size; i++)
+            {
+                byte tempByte = (byte)(value / sizemax(size - i - 1));
+                _mem[pos + i] = tempByte;
+                value -= (tempByte * sizemax(size - i - 1));
+            }
+        }
+
+        public static string getpage(long pagenum)
+        {
+            if (pagenum < 0 || pagenum >= mempos.totalpagecount)
+            {
+                throw new ArgumentOutOfRangeException($"getpage({pagenum})");
+            }
+            StringBuilder result = new StringBuilder();
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    result.Append(_mem[(pagenum * 256) + (y * 16) + x].ToString("x2"));
+                    if (x < 15)
                     {
-                        throw new ArgumentOutOfRangeException($"setnum({pos},{size},{tempValue})");
+                        result.Append(" ");
                     }
-                    tempValue -= (tempValue / sizemax(size)) * sizemax(size);
                 }
-                else if (tempValue < 0)
+                if (y < 15)
                 {
-                    tempValue += sizemax(size);
-                }
-                for (int i = 0; i < size; i++)
-                {
-                    byte tempByte = (byte)(tempValue / sizemax(size - i - 1));
-                    _mem[pos + i] = tempByte;
-                    tempValue -= (tempByte * sizemax(size - i - 1));
+                    result.AppendLine();
                 }
             }
+            return result.ToString();
         }
     }
 }
