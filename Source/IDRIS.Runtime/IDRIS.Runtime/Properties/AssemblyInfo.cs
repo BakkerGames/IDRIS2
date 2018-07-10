@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("IDRIS_Runtime")]
+[assembly: AssemblyTitle("IDRIS.Runtime")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Custom Disability Solutions")]
-[assembly: AssemblyProduct("IDRIS_Runtime")]
+[assembly: AssemblyProduct("IDRIS.Runtime")]
 [assembly: AssemblyCopyright("Copyright © Custom Disability Solutions 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

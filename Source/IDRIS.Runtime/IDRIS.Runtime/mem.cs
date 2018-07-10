@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 
-namespace IDRIS_Runtime
+namespace IDRIS.Runtime
 {
     public static partial class mem
     {

@@ -1,9 +1,9 @@
 ﻿// Program.cs - 07/10/2018
 
-using IDRIS_Runtime;
+using IDRIS.Runtime;
 using System;
 
-namespace Test.IDRIS_Runtime
+namespace Test.IDRIS.Runtime
 {
     class Program
     {

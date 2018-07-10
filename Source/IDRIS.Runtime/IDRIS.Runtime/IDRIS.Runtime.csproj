@@ -7,8 +7,8 @@
     <ProjectGuid>{0E8B17CA-6E83-4F3A-8093-14FAB72F5F99}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IDRIS_Runtime</RootNamespace>
-    <AssemblyName>IDRIS_Runtime</AssemblyName>
+    <RootNamespace>IDRIS.Runtime</RootNamespace>
+    <AssemblyName>IDRIS.Runtime</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

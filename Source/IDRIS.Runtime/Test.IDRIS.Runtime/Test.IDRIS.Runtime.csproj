@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{61E55C2B-308F-47F5-8322-5B40CB817227}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Test.IDRIS_Runtime</RootNamespace>
-    <AssemblyName>Test.IDRIS_Runtime</AssemblyName>
+    <RootNamespace>Test.IDRIS.Runtime</RootNamespace>
+    <AssemblyName>Test.IDRIS.Runtime</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Test.IDRIS_Runtime.Program</StartupObject>
+    <StartupObject>Test.IDRIS.Runtime.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
@@ -89,9 +89,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IDRIS_Runtime\IDRIS_Runtime.csproj">
+    <ProjectReference Include="..\IDRIS.Runtime\IDRIS.Runtime.csproj">
       <Project>{0e8b17ca-6e83-4f3a-8093-14fab72f5f99}</Project>
-      <Name>IDRIS_Runtime</Name>
+      <Name>IDRIS.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

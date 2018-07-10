@@ -2,7 +2,7 @@
 
 using System;
 
-namespace IDRIS_Runtime
+namespace IDRIS.Runtime
 {
     public static partial class mempos
     {
