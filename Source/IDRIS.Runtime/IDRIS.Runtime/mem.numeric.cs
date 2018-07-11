@@ -4,11 +4,11 @@ using System;
 
 namespace IDRIS.Runtime
 {
-    public static partial class mem
+    public static partial class Mem
     {
-        public static long getbyte(long pos)
+        public static long GetByte(long pos)
         {
-            if (pos < 0 || pos >= mempos.totalmemsize)
+            if (pos < 0 || pos >= MemPos.totalmemsize)
             {
                 throw new SystemException($"getbyte({pos}) - out of bounds");
             }
@@ -20,9 +20,9 @@ namespace IDRIS.Runtime
             return result;
         }
 
-        public static long getnum(long pos, long size)
+        public static long GetNum(long pos, long size)
         {
-            if (pos < 0 || pos + size - 1 >= mempos.totalmemsize || size < 1 || size > mempos.numslotsize)
+            if (pos < 0 || pos + size - 1 >= MemPos.totalmemsize || size < 1 || size > MemPos.numslotsize)
             {
                 throw new SystemException($"getnum({pos},{size}) - out of bounds");
             }
@@ -31,22 +31,22 @@ namespace IDRIS.Runtime
             {
                 result = (result * 256) + _mem[pos + i];
             }
-            if (result >= halfsizemax(size))
+            if (result >= HalfSizeMax(size))
             {
-                result -= sizemax(size);
+                result -= SizeMax(size);
             }
             return result;
         }
 
-        public static void setbyte(long pos, long value)
+        public static void SetByte(long pos, long value)
         {
-            if (pos < 0 || pos >= mempos.totalmemsize)
+            if (pos < 0 || pos >= MemPos.totalmemsize)
             {
                 throw new SystemException($"setbyte({pos}) - out of bounds");
             }
             if (value < -256 || value > 256)
             {
-                if ((_mem[mempos.privg] & 2) == 0) // not set
+                if ((_mem[MemPos.privg] & 2) == 0) // not set
                 {
                     throw new SystemException($"setbyte({pos},{value}) - numeric overflow");
                 }
@@ -61,29 +61,29 @@ namespace IDRIS.Runtime
             }
         }
 
-        public static void setnum(long pos, long size, long value)
+        public static void SetNum(long pos, long size, long value)
         {
-            if (pos < 0 || pos + size - 1 >= mempos.totalmemsize || size < 1 || size > mempos.numslotsize)
+            if (pos < 0 || pos + size - 1 >= MemPos.totalmemsize || size < 1 || size > MemPos.numslotsize)
             {
                 throw new SystemException($"setnum({pos},{size}) - out of bounds");
             }
-            if (value < -halfsizemax(size) || value >= halfsizemax(size))
+            if (value < -HalfSizeMax(size) || value >= HalfSizeMax(size))
             {
-                if ((_mem[mempos.privg] & 2) == 0) // not set
+                if ((_mem[MemPos.privg] & 2) == 0) // not set
                 {
                     throw new SystemException($"setnum({pos},{size},{value}) - numeric overflow");
                 }
-                value -= (value / sizemax(size)) * sizemax(size);
+                value -= (value / SizeMax(size)) * SizeMax(size);
             }
             else if (value < 0)
             {
-                value += sizemax(size);
+                value += SizeMax(size);
             }
             for (int i = 0; i < size; i++)
             {
-                byte tempByte = (byte)(value / sizemax(size - i - 1));
+                byte tempByte = (byte)(value / SizeMax(size - i - 1));
                 _mem[pos + i] = tempByte;
-                value -= (tempByte * sizemax(size - i - 1));
+                value -= (tempByte * SizeMax(size - i - 1));
             }
         }
     }

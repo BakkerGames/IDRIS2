@@ -5,11 +5,11 @@ using System.Text;
 
 namespace IDRIS.Runtime
 {
-    public static partial class mem
+    public static partial class Mem
     {
-        public static string getpage(long pagenum)
+        public static string GetPage(long pagenum)
         {
-            if (pagenum < 0 || pagenum >= mempos.totalpagecount)
+            if (pagenum < 0 || pagenum >= MemPos.totalpagecount)
             {
                 throw new SystemException($"getpage({pagenum}) - out of bounds");
             }

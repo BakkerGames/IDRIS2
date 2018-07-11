@@ -1,15 +1,14 @@
 ﻿// mem.cs - 07/11/2018
 
 using System;
-using System.Text;
 
 namespace IDRIS.Runtime
 {
-    public static partial class mem
+    public static partial class Mem
     {
-        private static byte[] _mem = new byte[mempos.totalmemsize];
+        private static byte[] _mem = new byte[MemPos.totalmemsize];
 
-        public static long sizemax(long size)
+        public static long SizeMax(long size)
         {
             switch (size)
             {
@@ -24,7 +23,7 @@ namespace IDRIS.Runtime
             throw new SystemException($"sizemax({size}) - invalid size");
         }
 
-        public static long halfsizemax(long size)
+        public static long HalfSizeMax(long size)
         {
             switch (size)
             {
@@ -39,7 +38,7 @@ namespace IDRIS.Runtime
             throw new SystemException($"halfsizemax({size}) - invalid size");
         }
 
-        public static void move(long frompos, long topos, long len)
+        public static void Move(long frompos, long topos, long len)
         {
             if (len == 0)
             {
@@ -49,8 +48,8 @@ namespace IDRIS.Runtime
             {
                 throw new SystemException($"move({frompos},{topos},{len}) - invalid len");
             }
-            if (frompos < 0 || frompos + len - 1 >= mempos.totalmemsize
-                || topos < 0 || topos + len - 1 >= mempos.totalmemsize)
+            if (frompos < 0 || frompos + len - 1 >= MemPos.totalmemsize
+                || topos < 0 || topos + len - 1 >= MemPos.totalmemsize)
             {
                 throw new SystemException($"move({frompos},{topos},{len}) - out of bounds");
             }

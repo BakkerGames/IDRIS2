@@ -4,7 +4,7 @@ using System;
 
 namespace IDRIS.Runtime
 {
-    public static partial class mempos
+    public static partial class MemPos
     {
 
         // --------------------------------------------------------

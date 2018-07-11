@@ -11,21 +11,16 @@ namespace Test.IDRIS.Runtime
         {
             try
             {
-                mem.setalpha(mempos.a, "Hello world!");
-                Console.WriteLine(mem.getpage(3));
-                Console.WriteLine();
-                mem.spoolalpha(mempos.a, 5, "Hi!");
-                Console.WriteLine(mem.getpage(3));
-                Console.WriteLine();
-                Console.WriteLine(mem.getalpha(mempos.a));
-                Console.WriteLine($"\"{mem.packalpha(mempos.a, 6)}\"");
-                mem.setalpha(mempos.a + 3, "");
-                Console.WriteLine(mem.getpage(3));
-                Console.WriteLine($"\"{mem.packalpha(mempos.a, 6)}\"");
+                ILCode.BasePath = ILCode.BasePath.Replace("$DRIVE$", "D:").Replace("$ENV$", "LOCAL");
+                ILCode.OpenLib(0, "PROG_VOL", "P96VER3");
+                for (int i = 0; i < 1000; i++)
+                {
+                    Console.WriteLine(ILCode.GetLine(0, i));
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
             Console.WriteLine();
             Console.WriteLine("Press enter...");
