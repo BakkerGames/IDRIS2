@@ -17,12 +17,15 @@ namespace IDRIS.Runtime
             byte c;
             for (int y = 0; y < 16; y++)
             {
+                result.Append(pagenum.ToString("x2"));
+                result.Append((y * 16).ToString("x2"));
+                result.Append("  ");
                 for (int x = 0; x < 16; x++)
                 {
                     result.Append(_mem[(pagenum * 256) + (y * 16) + x].ToString("x2"));
                     result.Append(" ");
                 }
-                result.Append("  ");
+                result.Append(" ");
                 for (int x = 0; x < 16; x++)
                 {
                     c = _mem[(pagenum * 256) + (y * 16) + x];

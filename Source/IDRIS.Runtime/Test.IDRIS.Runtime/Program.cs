@@ -14,23 +14,12 @@ namespace Test.IDRIS.Runtime
                 ILCode.BasePath = ILCode.BasePath.Replace("$DRIVE$", "D:").Replace("$ENV$", "LOCAL");
                 ILCode.OpenLib(0, "PROG_VOL", "TESTLIB");
 
-                Screen.Reset();
-                Screen.CursorAt(1, 0);
-                Screen.SetAttrib(0);
-                Screen.Display("hello world!");
-                Screen.CursorAt(15, 4);
-                Screen.SetAttrib(0);
-                Screen.Display("Greetings!");
-                Screen.CursorAt(23, 70);
-                Screen.SetAttrib(2);
-                Screen.Display("This scrolls to next line");
-                Screen.CursorAt(0, 0);
-                Screen.Tab();
-                Console.WriteLine(Screen.ToString());
+                Mem.SetAlpha(MemPos.dateval, "07/11/2018");
+                Mem.SetNum(MemPos.dateval + 10, 4, 20180711);
+                Mem.SpoolAlpha(MemPos.key, 20, "this is in key");
+                Console.WriteLine(Mem.GetPage(2));
                 Console.WriteLine();
-                Screen.CursorAt(0, 0);
-                Screen.Clear();
-                Console.WriteLine(Screen.ToString());
+                Console.WriteLine(Mem.GetPage(3));
             }
             catch (Exception ex)
             {
