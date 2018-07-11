@@ -1,4 +1,4 @@
-﻿// mempos.cs - 07/10/2018
+﻿// mempos.cs - 07/11/2018
 
 using System;
 
@@ -271,7 +271,7 @@ namespace IDRIS.Runtime
             {
                 return f10 + offset - minfhigh;
             }
-            throw new ArgumentOutOfRangeException($"fx({offset})");
+            throw new SystemException($"fx({offset}) - invalid offset");
         }
 
         // --- Local copy of Global Flag registers ---
@@ -302,7 +302,7 @@ namespace IDRIS.Runtime
                 case 8: return g8;
                 case 9: return g9;
             }
-            throw new ArgumentOutOfRangeException($"gx({offset})");
+            throw new SystemException($"gx({offset}) - invalid offset");
         }
 
         // --- New Internal IDRIS Variables ---
@@ -345,7 +345,7 @@ namespace IDRIS.Runtime
             {
                 return n64 + ((offset - minnhigh) * numslotsize);
             }
-            throw new ArgumentOutOfRangeException($"nx({offset})");
+            throw new SystemException($"nx({offset}) - invalid offset");
         }
 
         // --- Low Alpha Varables ---

@@ -1,4 +1,4 @@
-﻿// Program.cs - 07/10/2018
+﻿// Program.cs - 07/11/2018
 
 using IDRIS.Runtime;
 using System;
@@ -11,10 +11,17 @@ namespace Test.IDRIS.Runtime
         {
             try
             {
-                mem.setnum(mempos.totalmemsize - 6, 6, -42);
-                Console.WriteLine(mem.getnum(mempos.totalmemsize - 6, 6).ToString());
+                mem.setalpha(mempos.a, "Hello world!");
+                Console.WriteLine(mem.getpage(3));
                 Console.WriteLine();
-                Console.WriteLine(mem.getpage(mempos.totalpagecount - 1));
+                mem.spoolalpha(mempos.a, 5, "Hi!");
+                Console.WriteLine(mem.getpage(3));
+                Console.WriteLine();
+                Console.WriteLine(mem.getalpha(mempos.a));
+                Console.WriteLine($"\"{mem.packalpha(mempos.a, 6)}\"");
+                mem.setalpha(mempos.a + 3, "");
+                Console.WriteLine(mem.getpage(3));
+                Console.WriteLine($"\"{mem.packalpha(mempos.a, 6)}\"");
             }
             catch (Exception ex)
             {
