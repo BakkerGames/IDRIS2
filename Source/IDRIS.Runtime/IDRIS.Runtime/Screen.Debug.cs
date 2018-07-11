@@ -8,50 +8,50 @@ namespace IDRIS.Runtime
     {
         public static new string ToString()
         {
-            return ToString(false);
-        }
-
-        public static string ToString(bool showAttrib)
-        {
             StringBuilder result = new StringBuilder();
             for (int y = 0; y < _height; y++)
             {
                 result.Append(y.ToString("00 "));
                 for (int x = 0; x < _width; x++)
                 {
-                    if (_screen[y * _width + x] <= 32)
+                    if (y == _cursory && x == _cursorx)
                     {
-                        result.Append('.');
+                        result.Append("#");
                     }
-                    else
+                    else if (_attrib[y * _width + x] < 0)
                     {
-                        result.Append((char)_screen[y * _width + x]);
-                    }
-                }
-                result.AppendLine();
-            }
-            result.AppendLine();
-            if (showAttrib)
-            {
-                for (int y = 0; y < _height; y++)
-                {
-                    result.Append(y.ToString("00 "));
-                    for (int x = 0; x < _width; x++)
-                    {
-                        if (_attrib[y * _width + x] < 0)
+                        if (_screen[y * _width + x] <= 32)
                         {
                             result.Append('.');
                         }
                         else
                         {
-                            result.Append('@');
+                            result.Append((char)_screen[y * _width + x]);
                         }
                     }
-                    result.AppendLine();
+                    else if ((_attrib[y * _width + x] / 2) % 2 == 0)
+                    {
+                        result.Append('U');
+                    }
+                    else
+                    {
+                        result.Append('P');
+                    }
                 }
                 result.AppendLine();
             }
-            result.Append($"Cursor at {_cursorx},{_cursory}");
+            result.Append("24 "); // status line
+            for (int x = 0; x < _width; x++)
+            {
+                if (_statusbar[x] <= 32)
+                {
+                    result.Append('_');
+                }
+                else
+                {
+                    result.Append((char)_statusbar[x]);
+                }
+            }
             return result.ToString();
         }
     }

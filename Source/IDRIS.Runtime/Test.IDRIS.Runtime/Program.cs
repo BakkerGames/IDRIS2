@@ -15,13 +15,21 @@ namespace Test.IDRIS.Runtime
                 ILCode.OpenLib(0, "PROG_VOL", "TESTLIB");
 
                 Screen.Reset();
-                Screen.SetCursor(0, 1);
+                Screen.CursorAt(1, 0);
                 Screen.SetAttrib(0);
                 Screen.Display("hello world!");
-                Screen.SetCursor(4, 15);
+                Screen.CursorAt(15, 4);
+                Screen.SetAttrib(0);
                 Screen.Display("Greetings!");
-                Screen.SetCursor(70, 23);
+                Screen.CursorAt(23, 70);
+                Screen.SetAttrib(2);
                 Screen.Display("This scrolls to next line");
+                Screen.CursorAt(0, 0);
+                Screen.Tab();
+                Console.WriteLine(Screen.ToString());
+                Console.WriteLine();
+                Screen.CursorAt(0, 0);
+                Screen.Clear();
                 Console.WriteLine(Screen.ToString());
             }
             catch (Exception ex)

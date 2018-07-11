@@ -6,10 +6,11 @@ namespace IDRIS.Runtime
 {
     public partial class Screen
     {
-        private const int _height = 24;
+        private const int _height = 24; // doesn't include status bar
         private const int _width = 80;
         private static int[] _screen = new int[_height * _width];
         private static int[] _attrib = new int[_height * _width];
+        private static int[] _statusbar = new int[_width];
         private static int _cursorx = 0;
         private static int _cursory = 0;
         private static bool _stay = false;
@@ -20,22 +21,27 @@ namespace IDRIS.Runtime
             {
                 for (int x = 0; x < _width; x++)
                 {
-                    _screen[(y * _width) + x] = 32;
-                    _attrib[(y * _width) + x] = -1;
+                    _screen[y * _width + x] = 32;
+                    _attrib[y * _width + x] = -1;
                 }
             }
-            SetCursor(0, 0);
+            CursorAt(0, 0);
         }
 
         public static void Clear()
         {
+            int lastAtt = 0;
             for (int y = 0; y < _height; y++)
             {
                 for (int x = 0; x < _width; x++)
                 {
+                    if (_attrib[y * _width + x] >= 0)
+                    {
+                        lastAtt = _attrib[y * _width + x];
+                    }
                     if (y >= _cursory || (y == _cursory && x >= _cursorx))
                     {
-                        if (((_attrib[y * _width + x] / 2) & 2) == 0)
+                        if ((lastAtt / 2) % 2 == 0)
                         {
                             _screen[y * _width + x] = 32;
                         }
@@ -44,11 +50,11 @@ namespace IDRIS.Runtime
             }
         }
 
-        public static void SetCursor(int x, int y)
+        public static void CursorAt(int y, int x)
         {
             if (x < 0 || x >= _width || y < 0 || y >= _height)
             {
-                throw new SystemException($"setcursor({x},{y}) - invalid position");
+                throw new SystemException($"setcursor({y},{x}) - invalid position");
             }
             _cursorx = x;
             _cursory = y;
@@ -71,9 +77,36 @@ namespace IDRIS.Runtime
         {
             if (_stay)
             {
+                _stay = false;
                 return;
             }
             // todo tab to next unprotected spot
+            bool foundSpot = false;
+            for (int y = _cursory; y < _height; y++)
+            {
+                if (foundSpot)
+                {
+                    break;
+                }
+                for (int x = 0; x < _width; x++)
+                {
+                    if (y == _cursory && x <= _cursorx)
+                    {
+                        continue;
+                    }
+                    if (_attrib[y * _width + x] >= 0)
+                    {
+                        if ((_attrib[y * _width + x] / 2) % 2 == 0)
+                        {
+                            _cursory = y;
+                            _cursorx = x;
+                            IncrementCursor();
+                            foundSpot = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public static void SetAttrib(int value)
