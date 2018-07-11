@@ -9,7 +9,6 @@ namespace IDRIS.Runtime
     {
         public static string getpage(long pagenum)
         {
-            // todo add chars to end of lines
             if (pagenum < 0 || pagenum >= mempos.totalpagecount)
             {
                 throw new SystemException($"getpage({pagenum}) - out of bounds");
