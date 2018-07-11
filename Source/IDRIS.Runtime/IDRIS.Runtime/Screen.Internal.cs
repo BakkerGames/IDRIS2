@@ -24,14 +24,14 @@ namespace IDRIS.Runtime
             {
                 for (int x = 0; x < _width; x++)
                 {
-                    _screen[(y - 1) * _height + x] = _screen[y * _height + x];
-                    _attrib[(y - 1) * _height + x] = _attrib[y * _height + x];
+                    _screen[(y - 1) * _width + x] = _screen[y * _width + x];
+                    _attrib[(y - 1) * _width + x] = _attrib[y * _width + x];
                 }
             }
             for (int x = 0; x < _width; x++)
             {
-                _screen[(_height - 1) * _height + x] = 32;
-                _attrib[(_height - 1) * _height + x] = -1;
+                _screen[(_height - 1) * _width + x] = 32;
+                _attrib[(_height - 1) * _width + x] = -1;
             }
             _cursory--;
         }

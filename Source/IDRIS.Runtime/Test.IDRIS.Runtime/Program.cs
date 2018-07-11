@@ -12,18 +12,24 @@ namespace Test.IDRIS.Runtime
             try
             {
                 ILCode.BasePath = ILCode.BasePath.Replace("$DRIVE$", "D:").Replace("$ENV$", "LOCAL");
-                ILCode.OpenLib(0, "PROG_VOL", "P96VER3");
-                for (int i = 0; i < 1000; i++)
-                {
-                    Console.WriteLine(ILCode.GetLine(0, i));
-                }
+                ILCode.OpenLib(0, "PROG_VOL", "TESTLIB");
+
+                Screen.Reset();
+                Screen.SetCursor(0, 1);
+                Screen.SetAttrib(0);
+                Screen.Display("hello world!");
+                Screen.SetCursor(4, 15);
+                Screen.Display("Greetings!");
+                Screen.SetCursor(70, 23);
+                Screen.Display("This scrolls to next line");
+                Console.WriteLine(Screen.ToString());
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
             Console.WriteLine();
-            Console.WriteLine("Press enter...");
+            Console.Write("Press enter...");
             Console.ReadLine();
         }
     }

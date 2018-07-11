@@ -8,7 +8,7 @@ namespace IDRIS.Runtime
     {
         private const int _height = 24;
         private const int _width = 80;
-        private static byte[] _screen = new byte[_height * _width];
+        private static int[] _screen = new int[_height * _width];
         private static int[] _attrib = new int[_height * _width];
         private static int _cursorx = 0;
         private static int _cursory = 0;
@@ -20,8 +20,8 @@ namespace IDRIS.Runtime
             {
                 for (int x = 0; x < _width; x++)
                 {
-                    _screen[y * _height + x] = 32;
-                    _attrib[y * _height + x] = -1;
+                    _screen[(y * _width) + x] = 32;
+                    _attrib[(y * _width) + x] = -1;
                 }
             }
             SetCursor(0, 0);
@@ -35,9 +35,9 @@ namespace IDRIS.Runtime
                 {
                     if (y >= _cursory || (y == _cursory && x >= _cursorx))
                     {
-                        if (((_attrib[y * _height + x] / 2) & 2) == 0)
+                        if (((_attrib[y * _width + x] / 2) & 2) == 0)
                         {
-                            _screen[y * _height + x] = 32;
+                            _screen[y * _width + x] = 32;
                         }
                     }
                 }
@@ -61,10 +61,19 @@ namespace IDRIS.Runtime
             {
                 c = value[i];
                 c = Functions.CharToAscii(c);
-                _screen[_cursory * _height + _cursorx] = (byte)c;
-                _attrib[_cursory * _height + _cursorx] = -1;
+                _screen[_cursory * _width + _cursorx] = (byte)c;
+                _attrib[_cursory * _width + _cursorx] = -1;
                 IncrementCursor();
             }
+        }
+
+        public static void Tab()
+        {
+            if (_stay)
+            {
+                return;
+            }
+            // todo tab to next unprotected spot
         }
 
         public static void SetAttrib(int value)
@@ -73,7 +82,8 @@ namespace IDRIS.Runtime
             {
                 throw new SystemException($"setattrib({value}) - invalid attribute");
             }
-            _attrib[_cursory * _height + _cursorx] = value;
+            _attrib[_cursory * _width + _cursorx] = value;
+            IncrementCursor();
         }
 
         public static void Stay()
