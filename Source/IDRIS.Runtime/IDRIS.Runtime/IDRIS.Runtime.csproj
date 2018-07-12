@@ -47,8 +47,10 @@
     <Compile Include="ILCode.cs" />
     <Compile Include="Keyboard.cs" />
     <Compile Include="Mem.Alpha.cs" />
+    <Compile Include="Mem.Bool.cs" />
     <Compile Include="Mem.Buffer.cs" />
     <Compile Include="Mem.Debug.cs" />
+    <Compile Include="Mem.Init.cs" />
     <Compile Include="Mem.Numeric.cs" />
     <Compile Include="MemPos.cs" />
     <Compile Include="Mem.cs" />
