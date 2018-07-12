@@ -4,7 +4,7 @@ using System;
 
 namespace IDRIS.Runtime
 {
-    public partial class Screen
+    public static partial class Screen
     {
         private const int _height = 24; // doesn't include status bar
         private const int _width = 80;

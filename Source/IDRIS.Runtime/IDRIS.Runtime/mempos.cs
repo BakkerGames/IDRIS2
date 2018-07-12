@@ -129,8 +129,8 @@ namespace IDRIS.Runtime
         public const int charpos = 48; //  x30
         public const int length = 49; //  x31
         public const int status = 50; //  x32
-        public const int escval = 51; //  x33
-        public const int canval = 52; //  x34
+        public const int esc = 51; //  x33
+        public const int can = 52; //  x34
         public const int lockval = 53; //  x35
         public const int tchan = 54; //  x36
         public const int term = 73; //  x49
@@ -329,7 +329,7 @@ namespace IDRIS.Runtime
         public const int maxnlow = 63;
 
         public const int rec = n + ((maxnlow + 1) * numslotsize);
-        public const int remval = n + ((maxnlow + 2) * numslotsize);
+        public const int rem = n + ((maxnlow + 2) * numslotsize);
 
         public const int n64 = 55 * 256; //  x3700
         public const int minnhigh = 64;
@@ -350,8 +350,8 @@ namespace IDRIS.Runtime
 
         // --- Low Alpha Varables ---
 
-        public const int dateval = 746; //  x02ea
-        public const int key = dateval + 18; //  x02fc
+        public const int date = 746; //  x02ea
+        public const int key = date + 18; //  x02fc
         public const int a = key + 20; //  x0310
         public const int a1 = a + 40; //  x0338
         public const int a2 = a + 60; //  x034c
@@ -415,14 +415,24 @@ namespace IDRIS.Runtime
 
         // --- Buffers ---
 
-        public const int r = 4 * 256; //  x0400
-        public const int z = 5 * 256; //  x0500
-        public const int x = 6 * 256; //  x0600
-        public const int y = 7 * 256; //  x0700
-        public const int w = 8 * 256; //  x0800
-        public const int s = 11 * 256; //  x0b00
-        public const int t = 12 * 256; //  x0c00
-        public const int u = 13 * 256; //  x0d00
-        public const int v = 14 * 256; //  x0e00
+        public const int rpage = 4; //  x0400
+        public const int zpage = 5; //  x0500
+        public const int xpage = 6; //  x0600
+        public const int ypage = 7; //  x0700
+        public const int wpage = 8; //  x0800
+        public const int spage = 11; //  x0b00
+        public const int tpage = 12; //  x0c00
+        public const int upage = 13; //  x0d00
+        public const int vpage = 14; //  x0e00
+
+        public const int r = rpage * 256; //  x0400
+        public const int z = zpage * 256; //  x0500
+        public const int x = xpage * 256; //  x0600
+        public const int y = ypage * 256; //  x0700
+        public const int w = wpage * 256; //  x0800
+        public const int s = spage * 256; //  x0b00
+        public const int t = tpage * 256; //  x0c00
+        public const int u = upage * 256; //  x0d00
+        public const int v = vpage * 256; //  x0e00
     }
 }

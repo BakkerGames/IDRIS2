@@ -4,7 +4,7 @@ using System.Text;
 
 namespace IDRIS.Runtime
 {
-    public partial class Screen
+    public static partial class Screen
     {
         public static new string ToString()
         {

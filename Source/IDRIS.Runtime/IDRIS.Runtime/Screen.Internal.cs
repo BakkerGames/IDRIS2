@@ -2,7 +2,7 @@
 
 namespace IDRIS.Runtime
 {
-    public partial class Screen
+    public static partial class Screen
     {
         private static void IncrementCursor()
         {
