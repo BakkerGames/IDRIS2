@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Data.cs" />
     <Compile Include="Functions.cs" />
+    <Compile Include="GosubStack.cs" />
     <Compile Include="ILCode.cs" />
     <Compile Include="Keyboard.cs" />
     <Compile Include="Mem.Alpha.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="MemPos.cs" />
     <Compile Include="Mem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunCadol.Commands.cs" />
+    <Compile Include="RunCadol.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Screen.Debug.cs" />
     <Compile Include="Screen.Internal.cs" />

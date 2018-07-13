@@ -1,4 +1,4 @@
-﻿// mempos.cs - 07/12/2018
+﻿// mempos.cs - 07/13/2018
 
 using System;
 
@@ -319,8 +319,8 @@ namespace IDRIS.Runtime
         public const int localedit = 148; // x94 - new in idris
         public const int scriptrunflag = 149; // x95 - new in idris
         public const int scriptwriteflag = 150; // x96 - new in idris
-        public const int progline = 151; // x97 - new in idris
-        public const int progtoken = 152; // x98 - new in idris
+        public const int progline = 151; // x97-x98 - new in idris
+        public const int progtoken = 153; // x99 - new in idris
 
         // --- Numeric 6-byte Variables ---
 

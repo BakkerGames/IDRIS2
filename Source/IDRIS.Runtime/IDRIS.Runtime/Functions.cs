@@ -1,4 +1,4 @@
-﻿// Functions.cs - 07/11/2018
+﻿// Functions.cs - 07/13/2018
 
 namespace IDRIS.Runtime
 {
@@ -80,6 +80,22 @@ namespace IDRIS.Runtime
                 case 'ž': return 'z';
             }
             return c;
+        }
+
+        public static bool IsNumber(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            foreach (char c in value)
+            {
+                if (c < '0' || c > '9')
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

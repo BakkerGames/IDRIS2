@@ -1,4 +1,4 @@
-﻿// screen.cs - 07/11/2019
+﻿// screen.cs - 07/13/2019
 
 using System;
 
@@ -13,7 +13,7 @@ namespace IDRIS.Runtime
         private static int[] _statusbar = new int[_width];
         private static int _cursorx = 0;
         private static int _cursory = 0;
-        private static bool _stay = false;
+        private static bool _graphics = false;
 
         public static void Reset()
         {
@@ -25,7 +25,14 @@ namespace IDRIS.Runtime
                     _attrib[y * _width + x] = -1;
                 }
             }
+            _graphics = false;
+            SetStay(false);
             CursorAt(0, 0);
+        }
+
+        internal static void Back()
+        {
+            throw new NotImplementedException();
         }
 
         public static void Clear()
@@ -52,12 +59,21 @@ namespace IDRIS.Runtime
 
         public static void CursorAt(int y, int x)
         {
+            if (x == -1)
+            {
+                x = _cursorx;
+            }
+            if (y == -1)
+            {
+                y = _cursory;
+            }
             if (x < 0 || x >= _width || y < 0 || y >= _height)
             {
                 throw new SystemException($"setcursor({y},{x}) - invalid position");
             }
             _cursorx = x;
             _cursory = y;
+            SetStay(true);
         }
 
         public static void Display(string value)
@@ -67,17 +83,32 @@ namespace IDRIS.Runtime
             {
                 c = value[i];
                 c = Functions.CharToAscii(c);
-                _screen[_cursory * _width + _cursorx] = (byte)c;
+                if (_graphics)
+                {
+                    _screen[_cursory * _width + _cursorx] = '+'; // todo real graphics char
+                }
+                else
+                {
+                    _screen[_cursory * _width + _cursorx] = (byte)c;
+                }
                 _attrib[_cursory * _width + _cursorx] = -1;
                 IncrementCursor();
             }
         }
 
+        public static void Tab(long value)
+        {
+            for (long l = 0; l < value; l++)
+            {
+                Tab();
+            }
+        }
+
         public static void Tab()
         {
-            if (_stay)
+            if (IsStay())
             {
-                _stay = false;
+                SetStay(false);
                 return;
             }
             // todo tab to next unprotected spot
@@ -107,6 +138,19 @@ namespace IDRIS.Runtime
                     }
                 }
             }
+            if (!foundSpot) // move to end of screen
+            {
+                CursorAt(_height, _width);
+            }
+        }
+
+        internal static void Reject()
+        {
+            if (Mem.GetBool(MemPos.background) || Mem.GetBool(MemPos.printon))
+            {
+                return;
+            }
+            throw new NotImplementedException();
         }
 
         public static void SetAttrib(int value)
@@ -119,9 +163,40 @@ namespace IDRIS.Runtime
             IncrementCursor();
         }
 
-        public static void Stay()
+        public static bool IsStay()
         {
-            _stay = true;
+            return (Mem.GetByte(MemPos.charval) == 255);
+        }
+
+        public static void SetStay(bool value)
+        {
+            if (value)
+            {
+                Mem.SetByte(MemPos.charval, 255);
+            }
+            else
+            {
+                Mem.SetByte(MemPos.charval, 0);
+            }
+        }
+
+        public static void SetGraphics(bool value)
+        {
+            _graphics = value;
+        }
+
+        public static void NL(long value)
+        {
+            for (long l = 0; l < value; l++)
+            {
+                NL();
+            }
+        }
+
+        public static void NL()
+        {
+            CursorAt(-1, _width - 1);
+            IncrementCursor();
         }
     }
 }

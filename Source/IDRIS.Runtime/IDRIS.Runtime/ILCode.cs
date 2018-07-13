@@ -1,4 +1,4 @@
-﻿// ilcode.cs - 07/11/2019
+﻿// ilcode.cs - 07/13/2019
 
 using System;
 using System.IO;
@@ -32,9 +32,13 @@ namespace IDRIS.Runtime
             {
                 throw new SystemException($"openlib({device},{volume},{library})\r\n{ex.Message}");
             }
+            // start at first program in library
+            Mem.SetByte(MemPos.prog, 0);
+            Mem.SetNum(MemPos.progline, 2, 0);
+            Mem.SetByte(MemPos.progtoken, 0);
         }
 
-        public static string GetLine(int prognum, int linenum)
+        public static string GetLine(long prognum, long linenum)
         {
             if (prognum < 0 || prognum >= 256)
             {

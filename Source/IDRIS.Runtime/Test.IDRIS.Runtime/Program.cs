@@ -1,4 +1,4 @@
-﻿// Program.cs - 07/11/2018
+﻿// Program.cs - 07/13/2018
 
 using IDRIS.Runtime;
 using System;
@@ -12,8 +12,8 @@ namespace Test.IDRIS.Runtime
             try
             {
                 ILCode.BasePath = ILCode.BasePath.Replace("$DRIVE$", "D:").Replace("$ENV$", "LOCAL");
-                ILCode.OpenLib(0, "PROG_VOL", "TESTLIB");
-                Console.WriteLine(ILCode.GetLine(0, 0));
+                ILCode.OpenLib(0, "PROG_VOL", "P96VER3");
+                RunCadol.Run();
             }
             catch (Exception ex)
             {
