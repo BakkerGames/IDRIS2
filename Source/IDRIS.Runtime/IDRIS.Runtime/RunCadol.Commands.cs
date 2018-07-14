@@ -1,4 +1,4 @@
-﻿// RunCadol.Commands.cs - 07/13/2018
+﻿// RunCadol.Commands.cs - 07/14/2018
 
 using System;
 
@@ -6,10 +6,18 @@ namespace IDRIS.Runtime
 {
     public static partial class RunCadol
     {
-
         public static void Execute()
         {
+            // conditionals
+            if (CurrToken() == "IF")
+            {
+                TokenNum++;
+                RunIf();
+                return;
+            }
+            
             bool done = false;
+
             // single token commands
             switch (NextToken())
             {
@@ -105,7 +113,7 @@ namespace IDRIS.Runtime
                     break;
                 case "RETURN":
                     GosubStack.Pop();
-                    Console.WriteLine($" - return to {Mem.GetByte(MemPos.prog)},{Mem.GetNum(MemPos.progline,2)}"); // todo
+                    Console.WriteLine($" - return to {Mem.GetByte(MemPos.prog)},{Mem.GetNum(MemPos.progline, 2)}"); // todo
                     done = true;
                     break;
                 case "STAY":
@@ -208,7 +216,7 @@ namespace IDRIS.Runtime
             {
                 return;
             }
-            TokenNum = TokenNum - 1;
+            TokenNum--;
             Console.Write(CurrToken());
             Console.WriteLine(" - command not found");
         }
@@ -225,26 +233,91 @@ namespace IDRIS.Runtime
 
         public static string NextToken()
         {
-            TokenNum = TokenNum + 1;
+            TokenNum++;
             return _tokens[TokenNum - 1];
         }
 
         private static long GetNumericExpression()
         {
-            long result = 0;
-            if (Functions.IsNumber(CurrToken()))
+            long? result = null;
+            long tempNum = 0;
+            long unaryminus = 1;
+
+            if (CurrToken() == ")" 
+                || CurrToken() == "]" 
+                || CurrToken() == "," 
+                || CurrToken() == "="
+                || CurrToken() == "#"
+                || CurrToken() == "<"
+                || CurrToken() == ">"
+                || CurrToken() == "<="
+                || CurrToken() == ">="
+                || CurrToken() == "IF"
+                || CurrToken() == "THEN"
+                || CurrToken() == "AND"
+                || CurrToken() == "OR"
+                )
             {
-                result = long.Parse(NextToken());
+                TokenNum++;
+                return result.Value;
             }
-            else
+
+            if (CurrToken() == "-")
             {
-                throw new SystemException("getnumericexpression parse error");
+                TokenNum++;
+                unaryminus = -1;
             }
+
+            if (CurrToken() == "(")
+            {
+                result = unaryminus * GetNumericExpression();
+                unaryminus = 1;
+            }
+            else if (Functions.IsNumber(CurrToken()))
+            {
+                result = unaryminus * long.Parse(NextToken());
+                unaryminus = 1;
+            }
+
             if (AfterLastToken())
             {
-                return result;
+                return result.Value;
             }
-            throw new SystemException("getnumericexpression parse error");
+
+            if (CurrToken() == ")" || CurrToken() == "]" || CurrToken() == ",")
+            {
+                TokenNum++;
+                return result.Value;
+            }
+
+            bool hasOP = false;
+            do
+            {
+                hasOP = false;
+                if (CurrToken() == "+")
+                {
+                    result = result.Value + GetNumericExpression();
+                    hasOP = true;
+                }
+                else if (CurrToken() == "-")
+                {
+                    result = result.Value - GetNumericExpression();
+                    hasOP = true;
+                }
+                else if (CurrToken() == "*")
+                {
+                    result = result.Value * GetNumericExpression();
+                    hasOP = true;
+                }
+                else if (CurrToken() == "/")
+                {
+                    tempNum = GetNumericExpression();
+                    Mem.SetNum(MemPos.rem, MemPos.numslotsize, result.Value % tempNum);
+                    result = result.Value / tempNum;
+                    hasOP = true;
+                }
+            } while (hasOP);
+            return result.Value;
         }
     }
 }
