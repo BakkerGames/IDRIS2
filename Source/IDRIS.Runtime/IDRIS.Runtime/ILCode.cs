@@ -35,7 +35,6 @@ namespace IDRIS.Runtime
             // start at first program in library
             Mem.SetByte(MemPos.prog, 0);
             Mem.SetNum(MemPos.progline, 2, 0);
-            Mem.SetByte(MemPos.progtoken, 0);
         }
 
         public static string GetLine(long prognum, long linenum)

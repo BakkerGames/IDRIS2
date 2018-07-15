@@ -1,4 +1,4 @@
-﻿// GosubStack.cs - 07/13/2018
+﻿// GosubStack.cs - 07/14/2018
 
 using System;
 using System.Collections;
@@ -26,7 +26,6 @@ namespace IDRIS.Runtime
             StackItem item = (StackItem)_gosubstack.Pop();
             Mem.SetByte(MemPos.prog, item.prog);
             Mem.SetNum(MemPos.progline, 2, item.progline);
-            Mem.SetByte(MemPos.progtoken, 0);
         }
     }
 
@@ -35,5 +34,4 @@ namespace IDRIS.Runtime
         public long prog;
         public long progline;
     }
-
 }
