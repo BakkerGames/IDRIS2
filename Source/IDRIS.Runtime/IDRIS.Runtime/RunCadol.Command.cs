@@ -61,6 +61,101 @@ namespace IDRIS.Runtime
                 case "HOME":
                     Screen.CursorAt(0, 0);
                     break;
+                case "INIT":
+                    switch (_tokens[_lastTokenNum])
+                    {
+                        case "R":
+                        case "RP":
+                            Mem.SetByte(MemPos.rp2, MemPos.rpage);
+                            Mem.SetByte(MemPos.rp, 0);
+                            break;
+                        case "IR":
+                        case "IRP":
+                            Mem.SetByte(MemPos.irp2, MemPos.rpage);
+                            Mem.SetByte(MemPos.irp, 0);
+                            break;
+                        case "Z":
+                        case "ZP":
+                            Mem.SetByte(MemPos.zp2, MemPos.zpage);
+                            Mem.SetByte(MemPos.zp, 0);
+                            break;
+                        case "ZR":
+                        case "ZRP":
+                            Mem.SetByte(MemPos.izp2, MemPos.zpage);
+                            Mem.SetByte(MemPos.izp, 0);
+                            break;
+                        case "X":
+                        case "XP":
+                            Mem.SetByte(MemPos.xp2, MemPos.xpage);
+                            Mem.SetByte(MemPos.xp, 0);
+                            break;
+                        case "IX":
+                        case "IXP":
+                            Mem.SetByte(MemPos.ixp2, MemPos.xpage);
+                            Mem.SetByte(MemPos.ixp, 0);
+                            break;
+                        case "Y":
+                        case "YP":
+                            Mem.SetByte(MemPos.yp2, MemPos.ypage);
+                            Mem.SetByte(MemPos.yp, 0);
+                            break;
+                        case "IY":
+                        case "IYP":
+                            Mem.SetByte(MemPos.iyp2, MemPos.ypage);
+                            Mem.SetByte(MemPos.iyp, 0);
+                            break;
+                        case "W":
+                        case "WP":
+                            Mem.SetByte(MemPos.wp2, MemPos.wpage);
+                            Mem.SetByte(MemPos.wp, 0);
+                            break;
+                        case "IW":
+                        case "IWP":
+                            Mem.SetByte(MemPos.iwp2, MemPos.wpage);
+                            Mem.SetByte(MemPos.iwp, 0);
+                            break;
+                        case "S":
+                        case "SP":
+                            Mem.SetByte(MemPos.sp2, MemPos.spage);
+                            Mem.SetByte(MemPos.sp, 0);
+                            break;
+                        case "IS":
+                        case "ISP":
+                            Mem.SetByte(MemPos.isp2, MemPos.spage);
+                            Mem.SetByte(MemPos.isp, 0);
+                            break;
+                        case "T":
+                        case "TP":
+                            Mem.SetByte(MemPos.tp2, MemPos.tpage);
+                            Mem.SetByte(MemPos.tp, 0);
+                            break;
+                        case "IT":
+                        case "ITP":
+                            Mem.SetByte(MemPos.itp2, MemPos.tpage);
+                            Mem.SetByte(MemPos.itp, 0);
+                            break;
+                        case "U":
+                        case "UP":
+                            Mem.SetByte(MemPos.up2, MemPos.upage);
+                            Mem.SetByte(MemPos.up, 0);
+                            break;
+                        case "IU":
+                        case "IUP":
+                            Mem.SetByte(MemPos.iup2, MemPos.upage);
+                            Mem.SetByte(MemPos.iup, 0);
+                            break;
+                        case "V":
+                        case "VP":
+                            Mem.SetByte(MemPos.vp2, MemPos.vpage);
+                            Mem.SetByte(MemPos.vp, 0);
+                            break;
+                        case "IV":
+                        case "IVP":
+                            Mem.SetByte(MemPos.ivp2, MemPos.vpage);
+                            Mem.SetByte(MemPos.ivp, 0);
+                            break;
+                    }
+                    break;
                 case "INITFETCH":
                     // todo
                     break;
@@ -151,90 +246,6 @@ namespace IDRIS.Runtime
                     Console.WriteLine($"Error: Unknown command {_tokens[_tokenNum]}");
                     break;
             }
-        }
-
-        private static long GetNumericExpression()
-        {
-            long result = 0;
-            //long tempNum = 0;
-            //long unaryminus = 1;
-
-            //if (CurrToken() == ")"
-            //    || CurrToken() == "]"
-            //    || CurrToken() == ","
-            //    || CurrToken() == "="
-            //    || CurrToken() == "#"
-            //    || CurrToken() == "<"
-            //    || CurrToken() == ">"
-            //    || CurrToken() == "<="
-            //    || CurrToken() == ">="
-            //    || CurrToken() == "IF"
-            //    || CurrToken() == "THEN"
-            //    || CurrToken() == "AND"
-            //    || CurrToken() == "OR"
-            //    )
-            //{
-            //    _tokenNum++;
-            //    return result.Value;
-            //}
-
-            //if (CurrToken() == "-")
-            //{
-            //    _tokenNum++;
-            //    unaryminus = -1;
-            //}
-
-            //if (CurrToken() == "(")
-            //{
-            //    result = unaryminus * GetNumericExpression();
-            //    unaryminus = 1;
-            //}
-            //else if (Functions.IsNumber(CurrToken()))
-            //{
-            //    result = unaryminus * long.Parse(NextToken());
-            //    unaryminus = 1;
-            //}
-
-            //if (AfterLastToken())
-            //{
-            //    return result.Value;
-            //}
-
-            //if (CurrToken() == ")" || CurrToken() == "]" || CurrToken() == ",")
-            //{
-            //    _tokenNum++;
-            //    return result.Value;
-            //}
-
-            //bool hasOP = false;
-            //do
-            //{
-            //    hasOP = false;
-            //    if (CurrToken() == "+")
-            //    {
-            //        result = result.Value + GetNumericExpression();
-            //        hasOP = true;
-            //    }
-            //    else if (CurrToken() == "-")
-            //    {
-            //        result = result.Value - GetNumericExpression();
-            //        hasOP = true;
-            //    }
-            //    else if (CurrToken() == "*")
-            //    {
-            //        result = result.Value * GetNumericExpression();
-            //        hasOP = true;
-            //    }
-            //    else if (CurrToken() == "/")
-            //    {
-            //        tempNum = GetNumericExpression();
-            //        Mem.SetNum(MemPos.rem, MemPos.numslotsize, result.Value % tempNum);
-            //        result = result.Value / tempNum;
-            //        hasOP = true;
-            //    }
-            //} while (hasOP);
-
-            return result;
         }
     }
 }

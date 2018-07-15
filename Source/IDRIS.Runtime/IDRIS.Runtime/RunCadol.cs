@@ -16,7 +16,7 @@ namespace IDRIS.Runtime
             while (true)
             {
                 _lineText = ILCode.GetLine(Mem.GetByte(MemPos.prog), Mem.GetNum(MemPos.progline, 2));
-                Console.WriteLine($"{Mem.GetByte(MemPos.prog)} {Mem.GetNum(MemPos.progline, 2)} {_lineText}"); // todo
+                Console.WriteLine($"{Mem.GetByte(MemPos.prog).ToString("000")}:{Mem.GetNum(MemPos.progline, 2).ToString("0000")} {_lineText}"); // todo
                 _tokens = _lineText.Split('\t');
                 _lastTokenNum = _tokens.GetUpperBound(0);
                 _tokenNum = 0;
@@ -26,6 +26,7 @@ namespace IDRIS.Runtime
                 }
                 Mem.SetNum(MemPos.progline, 2, Mem.GetNum(MemPos.progline, 2) + 1); // move to next line
                 ExecuteLine();
+                Console.ReadLine(); // todo
             }
         }
 
