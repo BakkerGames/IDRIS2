@@ -23,7 +23,7 @@ namespace IDRIS.Runtime
 
         public static void Run()
         {
-                long debugcount = 0;
+            long debugcount = 0;
             do
             {
                 _lineText = ILCode.GetLine(Mem.GetByte(MemPos.prog), Mem.GetNum(MemPos.progline, 2));
@@ -41,7 +41,7 @@ namespace IDRIS.Runtime
                 {
                     Console.Write("Press enter...");
                     Console.ReadLine();
-                    Console.WriteLine();
+                    Console.Clear();
                     debugcount = 0;
                 }
             } while (Mem.GetByte(MemPos.prog)
