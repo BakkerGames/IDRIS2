@@ -320,7 +320,6 @@ namespace IDRIS.Runtime
         public const int scriptrunflag = 149; // x95 - new in idris
         public const int scriptwriteflag = 150; // x96 - new in idris
         public const int progline = 151; // x97-x98 - new in idris
-        public const int progtoken = 153; // x99 - new in idris
 
         // --- Numeric 6-byte Variables ---
 

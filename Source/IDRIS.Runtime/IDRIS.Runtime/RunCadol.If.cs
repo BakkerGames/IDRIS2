@@ -7,15 +7,13 @@ namespace IDRIS.Runtime
 {
     public static partial class RunCadol
     {
-        public static void RunIf()
+        public static void ExecuteIf()
         {
             string answer1 = GetExpression();
-            string compOp = NextToken();
+            string compOp = _tokens[_tokenNum++];
             string answer2 = GetExpression();
 
             // todo look for GOTO xxx
-
-            Console.WriteLine($" - if {answer1.Replace("\t", "")} {compOp} {answer2.Replace("\t", "")}"); // todo
 
             //bool result = false;
             //switch (compOp)
@@ -45,23 +43,23 @@ namespace IDRIS.Runtime
         private static string GetExpression()
         {
             StringBuilder result = new StringBuilder();
-            result.Append(NextToken());
-            while (!AfterLastToken() && !EndOfExpression(CurrToken()))
-            {
-                result.Append("\t");
-                if (CurrToken() == "(" || CurrToken() == "[")
-                {
-                    result.Append(NextToken());
-                    result.Append("\t");
-                    result.Append(GetExpression());
-                    result.Append("\t");
-                    result.Append(NextToken());
-                }
-                else
-                {
-                    result.Append(NextToken());
-                }
-            }
+            //result.Append(NextToken());
+            //while (!AfterLastToken() && !EndOfExpression(CurrToken()))
+            //{
+            //    result.Append("\t");
+            //    if (CurrToken() == "(" || CurrToken() == "[")
+            //    {
+            //        result.Append(NextToken());
+            //        result.Append("\t");
+            //        result.Append(GetExpression());
+            //        result.Append("\t");
+            //        result.Append(NextToken());
+            //    }
+            //    else
+            //    {
+            //        result.Append(NextToken());
+            //    }
+            //}
             return result.ToString();
         }
 

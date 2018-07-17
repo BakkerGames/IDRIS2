@@ -1,4 +1,4 @@
-﻿// RunCadol.cs - 07/13/2018
+﻿// RunCadol.cs - 07/14/2018
 
 using System;
 
@@ -8,45 +8,47 @@ namespace IDRIS.Runtime
     {
         private static string _lineText;
         private static string[] _tokens;
-
-        private static long TokenNum
-        {
-            get
-            {
-                return Mem.GetByte(MemPos.progtoken);
-            }
-            set
-            {
-                Mem.SetByte(MemPos.progtoken, value);
-            }
-        }
+        private static int _tokenNum;
+        private static int _lastTokenNum;
 
         public static void Run()
         {
-            long debugcount = 0;
-            do
+            while (true)
             {
                 _lineText = ILCode.GetLine(Mem.GetByte(MemPos.prog), Mem.GetNum(MemPos.progline, 2));
-                Mem.SetNum(MemPos.progline, 2, Mem.GetNum(MemPos.progline, 2) + 1);
-                Mem.SetByte(MemPos.progtoken, 0);
+                Console.WriteLine($"{Mem.GetByte(MemPos.prog).ToString("000")}:{Mem.GetNum(MemPos.progline, 2).ToString("0000")} {_lineText}"); // todo
                 _tokens = _lineText.Split('\t');
-                if (Functions.IsNumber(_tokens[0]))
+                _lastTokenNum = _tokens.GetUpperBound(0);
+                _tokenNum = 0;
+                if (Functions.IsNumber(_tokens[_tokenNum]))
                 {
-                    Mem.SetByte(MemPos.progtoken, 1); // skip line number
+                    _tokenNum++;
                 }
-                Console.WriteLine(_lineText); // todo
-                Execute();
-                debugcount++;
-                if (debugcount >= 18)
-                {
-                    Console.Write("Press enter...");
-                    Console.ReadLine();
-                    Console.Clear();
-                    debugcount = 0;
-                }
-            } while (Mem.GetByte(MemPos.prog)
-                     + Mem.GetNum(MemPos.progline, 2)
-                     + Mem.GetByte(MemPos.progtoken) > 0);
+                Mem.SetNum(MemPos.progline, 2, Mem.GetNum(MemPos.progline, 2) + 1); // move to next line
+                ExecuteLine();
+                Console.ReadLine(); // todo
+            }
+        }
+
+        public static void ExecuteLine()
+        {
+            if (_tokens[_tokenNum] == "IF")
+            {
+                _tokenNum++;
+                ExecuteIf();
+                return;
+            }
+            if (IsNumericTarget())
+            {
+                ExecuteNumericAssignment();
+                return;
+            }
+            if (IsAlphaTarget())
+            {
+                ExecuteAlphaAssignment();
+                return;
+            }
+            ExecuteCommand();
         }
     }
 }
