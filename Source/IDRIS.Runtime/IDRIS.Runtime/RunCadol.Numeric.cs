@@ -8,33 +8,42 @@ namespace IDRIS.Runtime
     {
         private static bool IsNumericTarget()
         {
-            bool found = false;
-            for (int i = _tokenNum; i <= _lastTokenNum; i++)
-            {
-                if (_tokens[i] == "=")
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-            {
-                return false;
-            }
-            string currToken = _tokens[_tokenNum];
-            if (currToken == "N" || currToken == "F" || currToken == "G")
+            if (MemPos.GetPosByte(_tokens[_tokenNum]).HasValue)
             {
                 return true;
             }
-            if (currToken.StartsWith("N") || currToken.StartsWith("F") || currToken.StartsWith("G"))
+            if (MemPos.GetPosNumeric(_tokens[_tokenNum]).HasValue)
             {
-                if (Functions.IsNumber(currToken.Substring(1)))
-                {
-                    return true;
-                }
+                return true;
             }
-            // todo buffers and sysvars
             return false;
+            //bool found = false;
+            //for (int i = _tokenNum; i <= _lastTokenNum; i++)
+            //{
+            //    if (_tokens[i] == "=")
+            //    {
+            //        found = true;
+            //        break;
+            //    }
+            //}
+            //if (!found)
+            //{
+            //    return false;
+            //}
+            //string currToken = _tokens[_tokenNum];
+            //if (currToken == "N" || currToken == "F" || currToken == "G")
+            //{
+            //    return true;
+            //}
+            //if (currToken.StartsWith("N") || currToken.StartsWith("F") || currToken.StartsWith("G"))
+            //{
+            //    if (Functions.IsNumber(currToken.Substring(1)))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //// todo buffers and sysvars
+            //return false;
         }
 
         private static void ExecuteNumericAssignment()

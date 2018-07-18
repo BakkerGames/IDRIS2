@@ -55,7 +55,17 @@ namespace IDRIS.Runtime
             {
                 throw new SystemException($"getline({prognum},{linenum}) - line not found");
             }
-            return _ilcode[prognum][linenum];
+            return FixLine(_ilcode[prognum][linenum]);
+        }
+
+        private static string FixLine(string line)
+        {
+            // change R(A) to RA
+            if (line.Contains("\t(\tA\t)"))
+            {
+                return line.Replace("\t(\tA\t)", "A");
+            }
+            return line;
         }
     }
 }
