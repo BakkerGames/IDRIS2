@@ -62,7 +62,7 @@ namespace IDRIS.Runtime
                     Screen.CursorAt(0, 0);
                     break;
                 case "INIT":
-                    switch (_tokens[_lastTokenNum])
+                    switch (_tokens[_tokenNum])
                     {
                         case "R":
                         case "RP":
@@ -177,7 +177,7 @@ namespace IDRIS.Runtime
                     // todo
                     break;
                 case "NL":
-                    if (_tokenNum >= _lastTokenNum)
+                    if (_tokenNum >= _tokenCount)
                     {
                         tempValue = 1;
                     }
@@ -214,7 +214,7 @@ namespace IDRIS.Runtime
                     Data.LockFlag(false);
                     break;
                 case "TAB":
-                    if (_tokenNum >= _lastTokenNum)
+                    if (_tokenNum >= _tokenCount)
                     {
                         tempValue = 1;
                     }

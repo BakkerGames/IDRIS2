@@ -1,4 +1,4 @@
-﻿// RunCadol.Numeric.cs - 07/14/2018
+﻿// RunCadol.Numeric.cs - 07/19/2018
 
 using System;
 
@@ -8,87 +8,72 @@ namespace IDRIS.Runtime
     {
         private static bool IsNumericTarget()
         {
-            if (MemPos.GetPosByte(_tokens[_tokenNum]).HasValue)
+            if (MemPos.GetPosByte(_tokens[_tokenNum]).HasValue
+                || MemPos.GetPosNumeric(_tokens[_tokenNum]).HasValue)
             {
-                return true;
-            }
-            if (MemPos.GetPosNumeric(_tokens[_tokenNum]).HasValue)
-            {
-                return true;
+                if (_tokenNum < _tokenCount)
+                {
+                    if (_tokens[_tokenNum + 1] == "="
+                        || _tokens[_tokenNum + 1] == "["
+                        || _tokens[_tokenNum + 1] == "(")
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
-            //bool found = false;
-            //for (int i = _tokenNum; i <= _lastTokenNum; i++)
-            //{
-            //    if (_tokens[i] == "=")
-            //    {
-            //        found = true;
-            //        break;
-            //    }
-            //}
-            //if (!found)
-            //{
-            //    return false;
-            //}
-            //string currToken = _tokens[_tokenNum];
-            //if (currToken == "N" || currToken == "F" || currToken == "G")
-            //{
-            //    return true;
-            //}
-            //if (currToken.StartsWith("N") || currToken.StartsWith("F") || currToken.StartsWith("G"))
-            //{
-            //    if (Functions.IsNumber(currToken.Substring(1)))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //// todo buffers and sysvars
-            //return false;
         }
 
         private static void ExecuteNumericAssignment()
         {
-            int saveTokenNum = _tokenNum;
-            string currToken = _tokens[_tokenNum++];
-            if (_tokens[_tokenNum++] != "=")
+            //int saveTokenNum = _tokenNum;
+            long? targetPos = null;
+            long? targetSize = null;
+            bool? isTargetByte = null;
+            targetPos = MemPos.GetPosByte(_tokens[_tokenNum]);
+            if (targetPos.HasValue)
             {
-                _tokenNum = saveTokenNum;
-                throw new NotImplementedException();
+                targetSize = 1;
+                isTargetByte = true;
             }
-            int offset;
-            long tempValue = GetNumericExpression();
-            if (currToken == "N")
+            else
             {
-                Mem.SetNum(MemPos.n, MemPos.numslotsize, tempValue);
-                return;
+                targetPos = MemPos.GetPosNumeric(_tokens[_tokenNum]);
+                if (targetPos.HasValue)
+                {
+                    targetSize = MemPos.GetSizeNumeric(_tokens[_tokenNum]);
+                    isTargetByte = false;
+                }
             }
-            if (currToken.StartsWith("N"))
+            if (!targetPos.HasValue || !targetSize.HasValue || !isTargetByte.HasValue )
             {
-                offset = int.Parse(currToken.Substring(1));
-                Mem.SetNum(MemPos.nx(offset), MemPos.numslotsize, tempValue);
-                return;
+                throw new SystemException("Cannot parse numeric assignment: Target not found");
             }
-            if (currToken == "F")
+            _tokenNum++;
+            if (_tokens[_tokenNum] == "[")
             {
-                Mem.SetByte(MemPos.f, tempValue);
-                return;
+                _tokenNum++; // "["
+                long offset = GetNumericExpression();
+                _tokenNum++; // "]"
+                targetPos += offset;
             }
-            if (currToken.StartsWith("F"))
+            if (_tokens[_tokenNum] == "(")
             {
-                offset = int.Parse(currToken.Substring(1));
-                Mem.SetByte(MemPos.fx(offset), tempValue);
-                return;
+                throw new SystemException("TODO: Cannot handle buffer lengths yet");
             }
-            if (currToken == "G")
+            if (_tokens[_tokenNum] != "=")
             {
-                Mem.SetNum(MemPos.g, 2, tempValue);
-                return;
+                throw new SystemException("Cannot parse numeric expression: Equals sign expected");
             }
-            if (currToken.StartsWith("G"))
+            _tokenNum++;
+            long result = GetNumericExpression();
+            if (isTargetByte.Value)
             {
-                offset = int.Parse(currToken.Substring(1));
-                Mem.SetNum(MemPos.gx(offset), 2, tempValue);
-                return;
+                Mem.SetByte(targetPos.Value, result);
+            }
+            else
+            {
+                Mem.SetNum(targetPos.Value, targetSize.Value, result);
             }
         }
 

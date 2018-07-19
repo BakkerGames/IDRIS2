@@ -1,4 +1,4 @@
-﻿// RunCadol.cs - 07/14/2018
+﻿// RunCadol.cs - 07/19/2018
 
 using System;
 
@@ -9,7 +9,7 @@ namespace IDRIS.Runtime
         private static string _lineText;
         private static string[] _tokens;
         private static int _tokenNum;
-        private static int _lastTokenNum;
+        private static int _tokenCount;
 
         public static void Run()
         {
@@ -18,7 +18,7 @@ namespace IDRIS.Runtime
                 _lineText = ILCode.GetLine(Mem.GetByte(MemPos.prog), Mem.GetNum(MemPos.progline, 2));
                 Console.WriteLine($"{Mem.GetByte(MemPos.prog).ToString("000")}:{Mem.GetNum(MemPos.progline, 2).ToString("0000")} {_lineText}"); // todo
                 _tokens = _lineText.Split('\t');
-                _lastTokenNum = _tokens.GetUpperBound(0);
+                _tokenCount = _tokens.GetUpperBound(0) + 1;
                 _tokenNum = 0;
                 if (Functions.IsNumber(_tokens[_tokenNum]))
                 {

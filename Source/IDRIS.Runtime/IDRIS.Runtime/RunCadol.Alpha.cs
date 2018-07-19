@@ -1,4 +1,4 @@
-﻿// RunCadol.Alpha.cs - 07/14/2018
+﻿// RunCadol.Alpha.cs - 07/19/2018
 
 using System;
 
@@ -10,66 +10,66 @@ namespace IDRIS.Runtime
         {
             if (MemPos.GetPosAlpha(_tokens[_tokenNum]).HasValue)
             {
-                return true;
+                if (_tokenNum < _tokenCount)
+                {
+                    if (_tokens[_tokenNum + 1] == "="
+                        || _tokens[_tokenNum + 1] == "[")
+                    {
+                        return true;
+                    }
+                }
             }
-            //bool found = false;
-            //for (int i = _tokenNum; i <= _lastTokenNum; i++)
-            //{
-            //    if (_tokens[i] == "=")
-            //    {
-            //        found = true;
-            //        break;
-            //    }
-            //}
-            //if (!found)
-            //{
-            //    return false;
-            //}
-            //switch (_tokens[_tokenNum])
-            //{
-            //    case "KEY":
-            //    case "DATE":
-            //    case "A":
-            //    case "A1":
-            //    case "A2":
-            //    case "B":
-            //    case "B1":
-            //    case "B2":
-            //    case "C":
-            //    case "C1":
-            //    case "C2":
-            //    case "D":
-            //    case "D1":
-            //    case "D2":
-            //    case "E":
-            //    case "E1":
-            //    case "E2":
-            //        return true;
-            //}
-            //if (_tokens[_tokenNum] == "R"
-            //    || _tokens[_tokenNum] == "Z"
-            //    || _tokens[_tokenNum] == "X"
-            //    || _tokens[_tokenNum] == "Y"
-            //    || _tokens[_tokenNum] == "W"
-            //    || _tokens[_tokenNum] == "S"
-            //    || _tokens[_tokenNum] == "T"
-            //    || _tokens[_tokenNum] == "U"
-            //    || _tokens[_tokenNum] == "V")
-            //{
-            //    if (_tokenNum + 3 <= _lastTokenNum
-            //        && _tokens[_tokenNum + 1] == "(" 
-            //        && _tokens[_tokenNum + 2] == "A" 
-            //        && _tokens[_tokenNum + 3] == ")")
-            //    {
-            //        return true;
-            //    }
-            //}
             return false;
         }
 
         private static void ExecuteAlphaAssignment()
         {
-            //throw new NotImplementedException();
+            long? targetPos = null;
+            targetPos = MemPos.GetPosAlpha(_tokens[_tokenNum]);
+            if (!targetPos.HasValue)
+            {
+                throw new SystemException("Cannot parse alpha assignment: Target not found");
+            }
+            _tokenNum++;
+            if (_tokens[_tokenNum] == "[")
+            {
+                _tokenNum++; // "["
+                long offset = GetNumericExpression();
+                _tokenNum++; // "]"
+                targetPos += offset;
+            }
+            if (_tokens[_tokenNum] != "=")
+            {
+                throw new SystemException("Cannot parse alpha expression: Equals sign expected");
+            }
+            _tokenNum++;
+            string result = GetAlphaExpression();
+            Mem.SetAlpha(targetPos.Value, result);
+        }
+
+        private static string GetAlphaExpression()
+        {
+            if (_tokenNum >= _tokenCount)
+            {
+                throw new SystemException("Cannot parse alpha expression: Unexpected end of line");
+            }
+            string result = null;
+            if (_tokens[_tokenNum].StartsWith("\"")
+                || _tokens[_tokenNum].StartsWith("'")
+                || _tokens[_tokenNum].StartsWith("$")
+                || _tokens[_tokenNum].StartsWith("%"))
+            {
+                if (_tokenNum != _tokenCount - 1)
+                {
+                    throw new SystemException("Cannot parse alpha expression: Tokens after string literal");
+                }
+                result = _tokens[_tokenNum].Substring(1, _tokens[_tokenNum].Length - 2);
+            }
+            if (result == null)
+            {
+                throw new SystemException("Cannot parse alpha expression: No result");
+            }
+            return result;
         }
     }
 }
