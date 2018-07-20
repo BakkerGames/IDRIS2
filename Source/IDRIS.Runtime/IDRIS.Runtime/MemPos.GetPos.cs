@@ -1,4 +1,4 @@
-﻿// MemPos.GetPos.cs - 07/18/2018
+﻿// MemPos.GetPos.cs - 07/20/2018
 
 namespace IDRIS.Runtime
 {
@@ -405,6 +405,23 @@ namespace IDRIS.Runtime
                 case "T": return tpage;
                 case "U": return upage;
                 case "V": return vpage;
+            }
+            return null;
+        }
+
+        public static long? GetPosBufferAlpha(string token)
+        {
+            switch (token)
+            {
+                case "RA": return rp;
+                case "ZA": return zp;
+                case "XA": return xp;
+                case "YA": return yp;
+                case "WA": return wp;
+                case "SA": return sp;
+                case "TA": return tp;
+                case "UA": return up;
+                case "VA": return vp;
             }
             return null;
         }

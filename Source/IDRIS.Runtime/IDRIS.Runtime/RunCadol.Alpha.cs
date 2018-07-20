@@ -35,7 +35,10 @@ namespace IDRIS.Runtime
             {
                 _tokenNum++; // "["
                 long offset = GetNumericExpression();
-                _tokenNum++; // "]"
+                if (_tokens[_tokenNum++] != "]")
+                {
+                    throw new SystemException("ExecuteAlphaAssignment: No closing \"]\"");
+                }
                 targetPos += offset;
             }
             if (_tokens[_tokenNum] != "=")
@@ -64,6 +67,26 @@ namespace IDRIS.Runtime
                     throw new SystemException("Cannot parse alpha expression: Tokens after string literal");
                 }
                 result = _tokens[_tokenNum].Substring(1, _tokens[_tokenNum].Length - 2);
+            }
+            else
+            {
+                long? targetPos = null;
+                targetPos = MemPos.GetPosAlpha(_tokens[_tokenNum++]);
+                if (!targetPos.HasValue)
+                {
+                    throw new SystemException("Cannot parse alpha assignment: Target not found");
+                }
+                if (_tokenNum < _tokenCount && _tokens[_tokenNum] == "[")
+                {
+                    _tokenNum++; // "["
+                    long offset = GetNumericExpression();
+                    if (_tokens[_tokenNum++] != "]")
+                    {
+                        throw new SystemException("GetAlphaExpression: No closing \"]\"");
+                    }
+                    targetPos += offset;
+                }
+                result = Mem.GetAlpha(targetPos.Value);
             }
             if (result == null)
             {

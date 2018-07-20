@@ -26,7 +26,8 @@ namespace IDRIS.Runtime
 
         private static void ExecuteNumericAssignment()
         {
-            //int saveTokenNum = _tokenNum;
+            // todo must check numeric assignment flavors
+            // todo must handle numeric buffers as targets and values
             long? targetPos = null;
             long? targetSize = null;
             bool? isTargetByte = null;
@@ -45,7 +46,7 @@ namespace IDRIS.Runtime
                     isTargetByte = false;
                 }
             }
-            if (!targetPos.HasValue || !targetSize.HasValue || !isTargetByte.HasValue )
+            if (!targetPos.HasValue || !targetSize.HasValue || !isTargetByte.HasValue)
             {
                 throw new SystemException("Cannot parse numeric assignment: Target not found");
             }
@@ -54,7 +55,10 @@ namespace IDRIS.Runtime
             {
                 _tokenNum++; // "["
                 long offset = GetNumericExpression();
-                _tokenNum++; // "]"
+                if (_tokens[_tokenNum++] != "]")
+                {
+                    throw new SystemException("GetNumericAssignment: No closing \"]\"");
+                }
                 targetPos += offset;
             }
             if (_tokens[_tokenNum] == "(")
@@ -79,101 +83,110 @@ namespace IDRIS.Runtime
 
         private static long GetNumericExpression()
         {
-            long result = 0;
+            long result;
+            long negative = 1;
+            string currToken;
+            currToken = _tokens[_tokenNum++];
+            if (currToken == "-")
+            {
+                negative = -1;
+                currToken = _tokens[_tokenNum++];
+            }
 
+            if (currToken == "(")
+            {
+                result = negative * GetNumericExpression();
+                if (_tokens[_tokenNum++] != ")")
+                {
+                    throw new SystemException("GetNumericExpression: No closing \")\"");
+                }
+            }
+            else if (Functions.IsNumber(currToken))
+            {
+                result = negative * long.Parse(currToken);
+            }
+            else
+            {
+                _tokenNum--; // move back one
+                result = negative * GetNumericValue();
+            }
+            // see if done with expression
+            if (_tokenNum >= _tokenCount)
+            {
+                return result;
+            }
+            currToken = _tokens[_tokenNum];
+            switch (currToken)
+            {
+                case "]":
+                case ")":
+                    return result; // calling routine must gobble closing ] or )
+                case "+":
+                    return result + GetNumericExpression();
+                case "-":
+                    return result - GetNumericExpression();
+                case "*":
+                    return result * GetNumericExpression();
+                case "/":
+                    long tempExpr = GetNumericExpression();
+                    Mem.SetNum(MemPos.rem, MemPos.numslotsize, result % tempExpr);
+                    return result / tempExpr;
+            }
+            throw new SystemException("GetNumericExpression error");
+        }
+
+        private static long GetNumericValue()
+        {
             string currToken = _tokens[_tokenNum++];
             if (Functions.IsNumber(currToken))
             {
-                result = long.Parse(currToken);
+                return long.Parse(currToken);
             }
-            else if (currToken == "FALSE")
+            if (currToken == "FALSE")
             {
-                result = 0;
+                return 0;
             }
-            else if (currToken == "TRUE")
+            if (currToken == "TRUE")
             {
-                result = 1;
+                return 1;
             }
-
-            //long tempNum = 0;
-            //long unaryminus = 1;
-
-            //if (CurrToken() == ")"
-            //    || CurrToken() == "]"
-            //    || CurrToken() == ","
-            //    || CurrToken() == "="
-            //    || CurrToken() == "#"
-            //    || CurrToken() == "<"
-            //    || CurrToken() == ">"
-            //    || CurrToken() == "<="
-            //    || CurrToken() == ">="
-            //    || CurrToken() == "IF"
-            //    || CurrToken() == "THEN"
-            //    || CurrToken() == "AND"
-            //    || CurrToken() == "OR"
-            //    )
-            //{
-            //    _tokenNum++;
-            //    return result.Value;
-            //}
-
-            //if (CurrToken() == "-")
-            //{
-            //    _tokenNum++;
-            //    unaryminus = -1;
-            //}
-
-            //if (CurrToken() == "(")
-            //{
-            //    result = unaryminus * GetNumericExpression();
-            //    unaryminus = 1;
-            //}
-            //else if (Functions.IsNumber(CurrToken()))
-            //{
-            //    result = unaryminus * long.Parse(NextToken());
-            //    unaryminus = 1;
-            //}
-
-            //if (AfterLastToken())
-            //{
-            //    return result.Value;
-            //}
-
-            //if (CurrToken() == ")" || CurrToken() == "]" || CurrToken() == ",")
-            //{
-            //    _tokenNum++;
-            //    return result.Value;
-            //}
-
-            //bool hasOP = false;
-            //do
-            //{
-            //    hasOP = false;
-            //    if (CurrToken() == "+")
-            //    {
-            //        result = result.Value + GetNumericExpression();
-            //        hasOP = true;
-            //    }
-            //    else if (CurrToken() == "-")
-            //    {
-            //        result = result.Value - GetNumericExpression();
-            //        hasOP = true;
-            //    }
-            //    else if (CurrToken() == "*")
-            //    {
-            //        result = result.Value * GetNumericExpression();
-            //        hasOP = true;
-            //    }
-            //    else if (CurrToken() == "/")
-            //    {
-            //        tempNum = GetNumericExpression();
-            //        Mem.SetNum(MemPos.rem, MemPos.numslotsize, result.Value % tempNum);
-            //        result = result.Value / tempNum;
-            //        hasOP = true;
-            //    }
-            //} while (hasOP);
-
-            return result;
+            long? targetPos = null;
+            long? targetSize = null;
+            bool? isTargetByte = null;
+            targetPos = MemPos.GetPosByte(currToken);
+            if (targetPos.HasValue)
+            {
+                targetSize = 1;
+                isTargetByte = true;
+            }
+            else
+            {
+                targetPos = MemPos.GetPosNumeric(currToken);
+                if (targetPos.HasValue)
+                {
+                    targetSize = MemPos.GetSizeNumeric(currToken);
+                    isTargetByte = false;
+                }
+            }
+            if (!targetPos.HasValue || !targetSize.HasValue || !isTargetByte.HasValue)
+            {
+                throw new SystemException("GetNumericValue error");
+            }
+            if (_tokenNum < _tokenCount && _tokens[_tokenNum] == "[")
+            {
+                _tokenNum++; // "["
+                long offset = GetNumericExpression();
+                if (_tokens[_tokenNum++] != "]")
+                {
+                    throw new SystemException("GetNumericValue: No closing \"]\"");
+                }
+                targetPos += offset;
+            }
+            if (isTargetByte.Value)
+            {
+                return Mem.GetByte(targetPos.Value);
+            }
+            return Mem.GetNum(targetPos.Value, targetSize.Value);
         }
     }
 }
