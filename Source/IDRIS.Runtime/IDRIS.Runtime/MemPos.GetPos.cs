@@ -405,6 +405,15 @@ namespace IDRIS.Runtime
                 case "T": return tpage;
                 case "U": return upage;
                 case "V": return vpage;
+                case "IR": return rpage;
+                case "IZ": return zpage;
+                case "IX": return xpage;
+                case "IY": return ypage;
+                case "IW": return wpage;
+                case "IS": return spage;
+                case "IT": return tpage;
+                case "IU": return upage;
+                case "IV": return vpage;
             }
             return null;
         }

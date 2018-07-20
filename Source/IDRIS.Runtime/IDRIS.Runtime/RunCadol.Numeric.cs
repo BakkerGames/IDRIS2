@@ -1,4 +1,4 @@
-﻿// RunCadol.Numeric.cs - 07/19/2018
+﻿// RunCadol.Numeric.cs - 07/20/2018
 
 using System;
 
@@ -92,7 +92,6 @@ namespace IDRIS.Runtime
                 negative = -1;
                 currToken = _tokens[_tokenNum++];
             }
-
             if (currToken == "(")
             {
                 result = negative * GetNumericExpression();
@@ -119,15 +118,23 @@ namespace IDRIS.Runtime
             switch (currToken)
             {
                 case "]":
+                    return result;
                 case ")":
-                    return result; // calling routine must gobble closing ] or )
+                    return result;
                 case "+":
-                    return result + GetNumericExpression();
+                    _tokenNum++;
+                    result += GetNumericExpression();
+                    return result;
                 case "-":
-                    return result - GetNumericExpression();
+                    _tokenNum++;
+                    result =+ GetNumericExpression();
+                    return result;
                 case "*":
-                    return result * GetNumericExpression();
+                    _tokenNum++;
+                    result *= GetNumericExpression();
+                    return result;
                 case "/":
+                    _tokenNum++;
                     long tempExpr = GetNumericExpression();
                     Mem.SetNum(MemPos.rem, MemPos.numslotsize, result % tempExpr);
                     return result / tempExpr;

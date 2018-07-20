@@ -1,4 +1,4 @@
-﻿// RunCadol.If.cs - 07/14/2018
+﻿// RunCadol.If.cs - 07/20/2018
 
 using System;
 using System.Text;
@@ -9,10 +9,11 @@ namespace IDRIS.Runtime
     {
         public static void ExecuteIf()
         {
-            string answer1 = GetExpression();
-            string compOp = _tokens[_tokenNum++];
-            string answer2 = GetExpression();
+            Console.WriteLine("parse IF here"); // todo
 
+            //string answer1 = GetExpression();
+            //string compOp = _tokens[_tokenNum++];
+            //string answer2 = GetExpression();
             // todo look for GOTO xxx
 
             //bool result = false;

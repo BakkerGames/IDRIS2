@@ -1,4 +1,4 @@
-﻿// RunCadol.cs - 07/19/2018
+﻿// RunCadol.cs - 07/20/2018
 
 using System;
 
@@ -25,7 +25,15 @@ namespace IDRIS.Runtime
                     _tokenNum++;
                 }
                 Mem.SetNum(MemPos.progline, 2, Mem.GetNum(MemPos.progline, 2) + 1); // move to next line
-                ExecuteLine();
+                try
+                {
+                    ExecuteLine();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw;
+                }
                 Console.ReadLine(); // todo
             }
         }

@@ -28,6 +28,9 @@ namespace IDRIS.Runtime
                 case "CLOSEVOLUME":
                     // todo
                     break;
+                case "CONVERT":
+                    Console.WriteLine("converting"); // todo handle convert
+                    break;
                 case "CR":
                     Screen.CursorAt(-1, 0);
                     break;
@@ -62,99 +65,14 @@ namespace IDRIS.Runtime
                     Screen.CursorAt(0, 0);
                     break;
                 case "INIT":
-                    switch (_tokens[_tokenNum])
+                    long? ptrPos = MemPos.GetPosBufferPtr(_tokens[_tokenNum]);
+                    long? ptrPage = MemPos.GetPosBufferPage(_tokens[_tokenNum]);
+                    if (!ptrPos.HasValue || !ptrPage.HasValue)
                     {
-                        case "R":
-                        case "RP":
-                            Mem.SetByte(MemPos.rp2, MemPos.rpage);
-                            Mem.SetByte(MemPos.rp, 0);
-                            break;
-                        case "IR":
-                        case "IRP":
-                            Mem.SetByte(MemPos.irp2, MemPos.rpage);
-                            Mem.SetByte(MemPos.irp, 0);
-                            break;
-                        case "Z":
-                        case "ZP":
-                            Mem.SetByte(MemPos.zp2, MemPos.zpage);
-                            Mem.SetByte(MemPos.zp, 0);
-                            break;
-                        case "ZR":
-                        case "ZRP":
-                            Mem.SetByte(MemPos.izp2, MemPos.zpage);
-                            Mem.SetByte(MemPos.izp, 0);
-                            break;
-                        case "X":
-                        case "XP":
-                            Mem.SetByte(MemPos.xp2, MemPos.xpage);
-                            Mem.SetByte(MemPos.xp, 0);
-                            break;
-                        case "IX":
-                        case "IXP":
-                            Mem.SetByte(MemPos.ixp2, MemPos.xpage);
-                            Mem.SetByte(MemPos.ixp, 0);
-                            break;
-                        case "Y":
-                        case "YP":
-                            Mem.SetByte(MemPos.yp2, MemPos.ypage);
-                            Mem.SetByte(MemPos.yp, 0);
-                            break;
-                        case "IY":
-                        case "IYP":
-                            Mem.SetByte(MemPos.iyp2, MemPos.ypage);
-                            Mem.SetByte(MemPos.iyp, 0);
-                            break;
-                        case "W":
-                        case "WP":
-                            Mem.SetByte(MemPos.wp2, MemPos.wpage);
-                            Mem.SetByte(MemPos.wp, 0);
-                            break;
-                        case "IW":
-                        case "IWP":
-                            Mem.SetByte(MemPos.iwp2, MemPos.wpage);
-                            Mem.SetByte(MemPos.iwp, 0);
-                            break;
-                        case "S":
-                        case "SP":
-                            Mem.SetByte(MemPos.sp2, MemPos.spage);
-                            Mem.SetByte(MemPos.sp, 0);
-                            break;
-                        case "IS":
-                        case "ISP":
-                            Mem.SetByte(MemPos.isp2, MemPos.spage);
-                            Mem.SetByte(MemPos.isp, 0);
-                            break;
-                        case "T":
-                        case "TP":
-                            Mem.SetByte(MemPos.tp2, MemPos.tpage);
-                            Mem.SetByte(MemPos.tp, 0);
-                            break;
-                        case "IT":
-                        case "ITP":
-                            Mem.SetByte(MemPos.itp2, MemPos.tpage);
-                            Mem.SetByte(MemPos.itp, 0);
-                            break;
-                        case "U":
-                        case "UP":
-                            Mem.SetByte(MemPos.up2, MemPos.upage);
-                            Mem.SetByte(MemPos.up, 0);
-                            break;
-                        case "IU":
-                        case "IUP":
-                            Mem.SetByte(MemPos.iup2, MemPos.upage);
-                            Mem.SetByte(MemPos.iup, 0);
-                            break;
-                        case "V":
-                        case "VP":
-                            Mem.SetByte(MemPos.vp2, MemPos.vpage);
-                            Mem.SetByte(MemPos.vp, 0);
-                            break;
-                        case "IV":
-                        case "IVP":
-                            Mem.SetByte(MemPos.ivp2, MemPos.vpage);
-                            Mem.SetByte(MemPos.ivp, 0);
-                            break;
+                        throw new SystemException("INIT error");
                     }
+                    Mem.SetByte(ptrPos.Value + 1, ptrPage.Value);
+                    Mem.SetByte(ptrPos.Value, 0);
                     break;
                 case "INITFETCH":
                     // todo
@@ -176,6 +94,10 @@ namespace IDRIS.Runtime
                 case "MERGE":
                     // todo
                     break;
+                case "MOVE":
+                    // todo handle move
+                    Console.WriteLine("moving");
+                    break;
                 case "NL":
                     if (_tokenNum >= _tokenCount)
                     {
@@ -188,6 +110,9 @@ namespace IDRIS.Runtime
                     Screen.NL(tempValue);
                     break;
                 case "NOP":
+                    break;
+                case "PACK":
+                    Console.WriteLine("packing"); // todo handle pack
                     break;
                 case "PRINTOFF":
                     Mem.SetBool(MemPos.printon, false);
@@ -206,6 +131,10 @@ namespace IDRIS.Runtime
                     break;
                 case "RETURN":
                     GosubStack.Pop();
+                    break;
+                case "SPOOL":
+                    // todo handle spool
+                    Console.WriteLine("spooling");
                     break;
                 case "STAY":
                     Screen.SetStay(true);
@@ -232,6 +161,15 @@ namespace IDRIS.Runtime
                     break;
                 case "TABSET":
                     // todo
+                    break;
+                case "WHENCANCEL":
+                    Console.WriteLine("whencancel"); // todo handle whencancel
+                    break;
+                case "WHENERROR":
+                    Console.WriteLine("whenerror"); // todo handle whenerror
+                    break;
+                case "WHENESCAPE":
+                    Console.WriteLine("whenescape"); // todo handle whenescape
                     break;
                 case "WRITEBACK":
                     Data.WriteBack();

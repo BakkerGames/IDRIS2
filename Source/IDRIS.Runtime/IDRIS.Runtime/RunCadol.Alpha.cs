@@ -1,4 +1,4 @@
-﻿// RunCadol.Alpha.cs - 07/19/2018
+﻿// RunCadol.Alpha.cs - 07/20/2018
 
 using System;
 
@@ -8,7 +8,8 @@ namespace IDRIS.Runtime
     {
         private static bool IsAlphaTarget()
         {
-            if (MemPos.GetPosAlpha(_tokens[_tokenNum]).HasValue)
+            if (MemPos.GetPosAlpha(_tokens[_tokenNum]).HasValue
+                || MemPos.GetPosBufferAlpha(_tokens[_tokenNum]).HasValue)
             {
                 if (_tokenNum < _tokenCount)
                 {
@@ -25,7 +26,16 @@ namespace IDRIS.Runtime
         private static void ExecuteAlphaAssignment()
         {
             long? targetPos = null;
+            bool isBuffer = false;
             targetPos = MemPos.GetPosAlpha(_tokens[_tokenNum]);
+            if (!targetPos.HasValue)
+            {
+                targetPos = MemPos.GetPosBufferAlpha(_tokens[_tokenNum]);
+                if (targetPos.HasValue)
+                {
+                    isBuffer = true;
+                }
+            }
             if (!targetPos.HasValue)
             {
                 throw new SystemException("Cannot parse alpha assignment: Target not found");
@@ -47,7 +57,27 @@ namespace IDRIS.Runtime
             }
             _tokenNum++;
             string result = GetAlphaExpression();
-            Mem.SetAlpha(targetPos.Value, result);
+
+            if (isBuffer)
+            {
+                long bufferTargetPos = Mem.GetByte(targetPos.Value)
+                                       + (256 * Mem.GetByte(targetPos.Value + 1));
+                Mem.SetAlpha(bufferTargetPos, result);
+                if (result == "")
+                {
+                    bufferTargetPos += 1;
+                }
+                else
+                {
+                    bufferTargetPos += result.Length;
+                }
+                Mem.SetByte(targetPos.Value + 1, bufferTargetPos / 256);
+                Mem.SetByte(targetPos.Value, bufferTargetPos % 256);
+            }
+            else
+            {
+                Mem.SetAlpha(targetPos.Value, result);
+            }
         }
 
         private static string GetAlphaExpression()
