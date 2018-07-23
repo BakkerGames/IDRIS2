@@ -1,4 +1,4 @@
-﻿// mem.alpha.cs - 07/11/2018
+﻿// mem.alpha.cs - 07/23/2018
 
 using System;
 using System.Text;
@@ -53,9 +53,10 @@ namespace IDRIS.Runtime
             {
                 throw new SystemException($"setalpha({pos}) - out of bounds");
             }
-            if (string.IsNullOrEmpty(value)) // very common!
+            if (value == "") // very common!
             {
                 _mem[pos] = 0;
+                Mem.SetByte(MemPos.length, 1); // "" has a length of 1 byte
                 return;
             }
             int c;
@@ -68,6 +69,7 @@ namespace IDRIS.Runtime
             }
             c = Functions.CharToAscii(value[offset]);
             _mem[pos + offset] = (byte)c;
+            Mem.SetByte(MemPos.length, value.Length); // save length of chars moved
         }
 
         public static void SpoolAlpha(long pos, long len, string value)

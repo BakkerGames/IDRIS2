@@ -1,4 +1,4 @@
-﻿// RunCadol.Alpha.cs - 07/20/2018
+﻿// RunCadol.Alpha.cs - 07/23/2018
 
 using System;
 
@@ -92,10 +92,10 @@ namespace IDRIS.Runtime
                 || _tokens[_tokenNum].StartsWith("$")
                 || _tokens[_tokenNum].StartsWith("%"))
             {
-                if (_tokenNum != _tokenCount - 1)
-                {
-                    throw new SystemException("Cannot parse alpha expression: Tokens after string literal");
-                }
+                //if (_tokenNum != _tokenCount - 1)
+                //{
+                //    throw new SystemException("Cannot parse alpha expression: Tokens after string literal");
+                //}
                 result = _tokens[_tokenNum].Substring(1, _tokens[_tokenNum].Length - 2);
             }
             else

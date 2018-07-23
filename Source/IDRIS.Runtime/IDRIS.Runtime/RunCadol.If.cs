@@ -1,4 +1,4 @@
-﻿// RunCadol.If.cs - 07/20/2018
+﻿// RunCadol.If.cs - 07/23/2018
 
 using System;
 using System.Text;
@@ -11,34 +11,96 @@ namespace IDRIS.Runtime
         {
             Console.WriteLine("parse IF here"); // todo
 
-            //string answer1 = GetExpression();
-            //string compOp = _tokens[_tokenNum++];
-            //string answer2 = GetExpression();
-            // todo look for GOTO xxx
+            int saveTokenNum = _tokenNum;
 
-            //bool result = false;
-            //switch (compOp)
-            //{
-            //    case "=":
-            //        result = (answer1 == answer2);
-            //        break;
-            //    case "#":
-            //        result = (answer1 != answer2);
-            //        break;
-            //    case "<":
-            //        result = (answer1 < answer2);
-            //        break;
-            //    case ">":
-            //        result = (answer1 > answer2);
-            //        break;
-            //    case "<=":
-            //        result = (answer1 <= answer2);
-            //        break;
-            //    case ">=":
-            //        result = (answer1 >= answer2);
-            //        break;
-            //}
+            long numAnswer1 = 0;
+            long numAnswer2 = 0;
+            string alphaAnswer1 = "";
+            string alphaAnswer2 = "";
+            string comparitor = "";
+            bool result = false;
 
+            try
+            {
+                numAnswer1 = GetNumericExpression();
+                comparitor = _tokens[_tokenNum++];
+                numAnswer2 = GetNumericExpression();
+                switch (comparitor)
+                {
+                    case "=":
+                        result = (numAnswer1 == numAnswer2);
+                        break;
+                    case "#":
+                        result = (numAnswer1 != numAnswer2);
+                        break;
+                    case "<":
+                        result = (numAnswer1 < numAnswer2);
+                        break;
+                    case ">":
+                        result = (numAnswer1 > numAnswer2);
+                        break;
+                    case "<=":
+                        result = (numAnswer1 <= numAnswer2);
+                        break;
+                    case ">=":
+                        result = (numAnswer1 >= numAnswer2);
+                        break;
+                    default:
+                        throw new SystemException("Unknown comparitor");
+                }
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    _tokenNum = saveTokenNum;
+                    alphaAnswer1 = GetAlphaExpression();
+                    comparitor = _tokens[_tokenNum++];
+                    alphaAnswer2 = GetAlphaExpression();
+                    switch (comparitor)
+                    {
+                        case "=":
+                            result = (alphaAnswer1 == alphaAnswer2);
+                            break;
+                        case "#":
+                            result = (alphaAnswer1 != alphaAnswer2);
+                            break;
+                        case "<":
+                            result = (alphaAnswer1.CompareTo(alphaAnswer2) < 0);
+                            break;
+                        case ">":
+                            result = (alphaAnswer1.CompareTo(alphaAnswer2) > 0);
+                            break;
+                        case "<=":
+                            result = (alphaAnswer1.CompareTo(alphaAnswer2) <= 0);
+                            break;
+                        case ">=":
+                            result = (alphaAnswer1.CompareTo(alphaAnswer2) >= 0);
+                            break;
+                        default:
+                            throw new SystemException("Unknown comparitor");
+                    }
+                }
+                catch (Exception)
+                {
+                    throw new SystemException("Error parsing IF expressions");
+                }
+            }
+            if (!result)
+            {
+                return;
+            }
+            if (_tokenNum >= _tokenCount)
+            {
+                throw new SystemException("End of line in IF");
+            }
+            if (_tokens[_tokenNum++] != "GOTO")
+            {
+                throw new SystemException("GOTO not found after IF compare");
+            }
+            // goto xxx
+            long tempValue = GetNumericExpression();
+            Mem.SetNum(MemPos.progline, 2, tempValue);
         }
 
         private static string GetExpression()

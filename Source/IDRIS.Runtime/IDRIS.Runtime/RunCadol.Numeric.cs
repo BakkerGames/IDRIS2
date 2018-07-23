@@ -1,4 +1,4 @@
-﻿// RunCadol.Numeric.cs - 07/20/2018
+﻿// RunCadol.Numeric.cs - 07/23/2018
 
 using System;
 
@@ -118,8 +118,14 @@ namespace IDRIS.Runtime
             switch (currToken)
             {
                 case "]":
-                    return result;
                 case ")":
+                case "=":
+                case "#":
+                case "<":
+                case ">":
+                case "<=":
+                case ">=":
+                case "GOTO":
                     return result;
                 case "+":
                     _tokenNum++;
