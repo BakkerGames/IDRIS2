@@ -133,7 +133,7 @@ namespace IDRIS.Runtime
                     return result;
                 case "-":
                     _tokenNum++;
-                    result =+ GetNumericExpression();
+                    result -= GetNumericExpression();
                     return result;
                 case "*":
                     _tokenNum++;
@@ -166,11 +166,13 @@ namespace IDRIS.Runtime
             long? targetPos = null;
             long? targetSize = null;
             bool? isTargetByte = null;
+            bool? isBuffer = null;
             targetPos = MemPos.GetPosByte(currToken);
             if (targetPos.HasValue)
             {
                 targetSize = 1;
                 isTargetByte = true;
+                isBuffer = false;
             }
             else
             {
@@ -179,9 +181,25 @@ namespace IDRIS.Runtime
                 {
                     targetSize = MemPos.GetSizeNumeric(currToken);
                     isTargetByte = false;
+                    isBuffer = false;
+                }
+                else
+                {
+                    targetPos = MemPos.GetPosBufferPtr(currToken);
+                    if (targetPos.HasValue)
+                    {
+                        if (_tokens[_tokenNum] == "(")
+                        {
+                            _tokenNum++;
+                            targetSize = GetNumericValue();
+                            _tokenNum++;
+                            isTargetByte = false;
+                            isBuffer = true;
+                        }
+                    }
                 }
             }
-            if (!targetPos.HasValue || !targetSize.HasValue || !isTargetByte.HasValue)
+            if (!targetPos.HasValue || !targetSize.HasValue || !isTargetByte.HasValue || !isBuffer.HasValue)
             {
                 throw new SystemException("GetNumericValue error");
             }
@@ -198,6 +216,10 @@ namespace IDRIS.Runtime
             if (isTargetByte.Value)
             {
                 return Mem.GetByte(targetPos.Value);
+            }
+            if (isBuffer.Value)
+            {
+                return Mem.GetNumBuffer(targetPos.Value, targetSize.Value);
             }
             return Mem.GetNum(targetPos.Value, targetSize.Value);
         }

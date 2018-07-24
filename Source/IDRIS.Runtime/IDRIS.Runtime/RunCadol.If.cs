@@ -9,8 +9,6 @@ namespace IDRIS.Runtime
     {
         public static void ExecuteIf()
         {
-            Console.WriteLine("parse IF here"); // todo
-
             int saveTokenNum = _tokenNum;
 
             long numAnswer1 = 0;
