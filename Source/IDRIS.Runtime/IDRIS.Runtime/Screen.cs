@@ -1,4 +1,4 @@
-﻿// screen.cs - 07/13/2019
+﻿// screen.cs - 07/31/2019
 
 using System;
 
@@ -6,13 +6,13 @@ namespace IDRIS.Runtime
 {
     public static partial class Screen
     {
-        private const int _height = 24; // doesn't include status bar
-        private const int _width = 80;
+        private const long _height = 24; // doesn't include status bar
+        private const long _width = 80;
         private static int[] _screen = new int[_height * _width];
         private static int[] _attrib = new int[_height * _width];
         private static int[] _statusbar = new int[_width];
-        private static int _cursorx = 0;
-        private static int _cursory = 0;
+        private static long _cursorx = 0;
+        private static long _cursory = 0;
         private static bool _graphics = false;
 
         public static void Reset()
@@ -57,7 +57,7 @@ namespace IDRIS.Runtime
             }
         }
 
-        public static void CursorAt(int y, int x)
+        public static void CursorAt(long y, long x)
         {
             if (x == -1)
             {
@@ -113,7 +113,7 @@ namespace IDRIS.Runtime
             }
             // todo tab to next unprotected spot
             bool foundSpot = false;
-            for (int y = _cursory; y < _height; y++)
+            for (long y = _cursory; y < _height; y++)
             {
                 if (foundSpot)
                 {

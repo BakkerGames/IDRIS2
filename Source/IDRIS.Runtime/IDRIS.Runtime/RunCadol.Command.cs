@@ -1,4 +1,4 @@
-﻿// RunCadol.Command.cs - 07/14/2018
+﻿// RunCadol.Command.cs - 07/31/2018
 
 using System;
 
@@ -8,9 +8,13 @@ namespace IDRIS.Runtime
     {
         private static void ExecuteCommand()
         {
-            long tempValue;
+            long tempNum;
+            string tempAlpha;
             switch (_tokens[_tokenNum++])
             {
+                case "ATT":
+                    Console.WriteLine("### ATT"); // todo
+                    break;
                 case "BACK":
                     Screen.Back();
                     break;
@@ -23,16 +27,36 @@ namespace IDRIS.Runtime
                     Screen.Clear();
                     break;
                 case "CLOSETFA":
-                    // todo
+                    Console.WriteLine("### closetfa"); // todo
                     break;
                 case "CLOSEVOLUME":
-                    // todo
+                    Console.WriteLine("### closevolume"); // todo
                     break;
                 case "CONVERT":
-                    Console.WriteLine("converting"); // todo handle convert
+                    Console.WriteLine("### convert"); // todo
                     break;
                 case "CR":
                     Screen.CursorAt(-1, 0);
+                    break;
+                case "CURSORAT":
+                    long y = GetNumericValue();
+                    if (_tokens[_tokenNum++] != ",")
+                    {
+                        Console.WriteLine("invalid CURSORAT format");
+                        break;
+                    }
+                    long x = GetNumericValue();
+                    Screen.CursorAt(y, x);
+                    break;
+                case "DCH":
+                    Console.WriteLine("### dch");
+                    break;
+                case "DISPLAY":
+                    tempAlpha = GetAlphaExpression();
+                    Screen.Display(tempAlpha);
+                    break;
+                case "ENTERALPHA":
+                    Console.WriteLine("### ENTERALPHA"); // todo
                     break;
                 case "ESC":
                 case "ESCAPE":
@@ -41,19 +65,19 @@ namespace IDRIS.Runtime
                     Mem.SetNum(MemPos.progline, 2, 0);
                     break;
                 case "GOS":
-                    tempValue = GetNumericExpression();
+                    tempNum = GetNumericExpression();
                     GosubStack.Push();
-                    Mem.SetNum(MemPos.progline, 2, tempValue);
+                    Mem.SetNum(MemPos.progline, 2, tempNum);
                     break;
                 case "GOSUB":
-                    tempValue = GetNumericExpression();
+                    tempNum = GetNumericExpression();
                     GosubStack.Push();
-                    Mem.SetByte(MemPos.prog, tempValue);
+                    Mem.SetByte(MemPos.prog, tempNum);
                     Mem.SetNum(MemPos.progline, 2, 0);
                     break;
                 case "GOTO":
-                    tempValue = GetNumericExpression();
-                    Mem.SetNum(MemPos.progline, 2, tempValue);
+                    tempNum = GetNumericExpression();
+                    Mem.SetNum(MemPos.progline, 2, tempNum);
                     break;
                 case "GRAPHOFF":
                     Screen.SetGraphics(false);
@@ -75,7 +99,7 @@ namespace IDRIS.Runtime
                     Mem.SetByte(ptrPos.Value, 0);
                     break;
                 case "INITFETCH":
-                    // todo
+                    Console.WriteLine("### initfetch"); // todo
                     break;
                 case "KLOCK":
                     Keyboard.KeyLock(true);
@@ -84,35 +108,34 @@ namespace IDRIS.Runtime
                     Keyboard.KeyLock(false);
                     break;
                 case "LOAD":
-                    tempValue = GetNumericExpression();
-                    Mem.SetByte(MemPos.prog, tempValue);
+                    tempNum = GetNumericExpression();
+                    Mem.SetByte(MemPos.prog, tempNum);
                     Mem.SetNum(MemPos.progline, 2, 0);
                     break;
                 case "LOCK":
                     Data.LockFlag(true);
                     break;
                 case "MERGE":
-                    // todo
+                    Console.WriteLine("### merge"); // todo
                     break;
                 case "MOVE":
-                    // todo handle move
-                    Console.WriteLine("moving");
+                    Console.WriteLine("### move"); // todo
                     break;
                 case "NL":
                     if (_tokenNum >= _tokenCount)
                     {
-                        tempValue = 1;
+                        tempNum = 1;
                     }
                     else
                     {
-                        tempValue = GetNumericExpression();
+                        tempNum = GetNumericExpression();
                     }
-                    Screen.NL(tempValue);
+                    Screen.NL(tempNum);
                     break;
                 case "NOP":
                     break;
                 case "PACK":
-                    Console.WriteLine("packing"); // todo handle pack
+                    Console.WriteLine("### pack"); // todo
                     break;
                 case "PRINTOFF":
                     Mem.SetBool(MemPos.printon, false);
@@ -127,14 +150,13 @@ namespace IDRIS.Runtime
                     Screen.Reset();
                     break;
                 case "RELEASEDEVICE":
-                    // todo
+                    Console.WriteLine("### releasedevice"); // todo
                     break;
                 case "RETURN":
                     GosubStack.Pop();
                     break;
                 case "SPOOL":
-                    // todo handle spool
-                    Console.WriteLine("spooling");
+                    Console.WriteLine("### spool"); // todo
                     break;
                 case "STAY":
                     Screen.SetStay(true);
@@ -145,31 +167,31 @@ namespace IDRIS.Runtime
                 case "TAB":
                     if (_tokenNum >= _tokenCount)
                     {
-                        tempValue = 1;
+                        tempNum = 1;
                     }
                     else
                     {
-                        tempValue = GetNumericExpression();
+                        tempNum = GetNumericExpression();
                     }
-                    Screen.Tab(tempValue);
+                    Screen.Tab(tempNum);
                     break;
                 case "TABCANCEL":
-                    // todo
+                    Console.WriteLine("### tabcancel"); // todo
                     break;
                 case "TABCLEAR":
-                    // todo
+                    Console.WriteLine("### tabclear"); // todo
                     break;
                 case "TABSET":
-                    // todo
+                    Console.WriteLine("### tabset"); // todo
                     break;
                 case "WHENCANCEL":
-                    Console.WriteLine("whencancel"); // todo handle whencancel
+                    Console.WriteLine("### whencancel"); // todo
                     break;
                 case "WHENERROR":
-                    Console.WriteLine("whenerror"); // todo handle whenerror
+                    Console.WriteLine("### whenerror"); // todo
                     break;
                 case "WHENESCAPE":
-                    Console.WriteLine("whenescape"); // todo handle whenescape
+                    Console.WriteLine("### whenescape"); // todo
                     break;
                 case "WRITEBACK":
                     Data.WriteBack();
@@ -181,7 +203,7 @@ namespace IDRIS.Runtime
                     }
                     break;
                 default:
-                    Console.WriteLine($"Error: Unknown command {_tokens[_tokenNum]}");
+                    Console.WriteLine($"Error: Unknown command {_tokens[_tokenNum - 1]}");
                     break;
             }
         }

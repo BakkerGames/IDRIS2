@@ -1,11 +1,12 @@
-﻿// ilcode.cs - 07/13/2019
+﻿// ilcode.cs - 07/31/2019
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace IDRIS.Runtime
 {
-    public static class ILCode
+    public static partial class ILCode
     {
         public static string BasePath = "$DRIVE$\\IDRIS\\$ENV$\\PROGRAMS\\DEVICE";
 
@@ -56,6 +57,24 @@ namespace IDRIS.Runtime
                 throw new SystemException($"getline({prognum},{linenum}) - line not found");
             }
             return FixLine(_ilcode[prognum][linenum]);
+        }
+
+        public static List<string> GetAllLines(long prognum)
+        {
+            if (prognum < 0 || prognum >= 256)
+            {
+                throw new SystemException($"getalllines({prognum}) - invalid prognum");
+            }
+            if (_ilcode[prognum] == null)
+            {
+                throw new SystemException($"getalllines({prognum}) - program not found");
+            }
+            List<string> result = new List<string>();
+            for (long i = 0; i <= _ilcode[prognum].GetUpperBound(0); i++)
+            {
+                result.Add(FixLine(_ilcode[prognum][i]).Replace('\t', ' '));
+            }
+            return result;
         }
 
         private static string FixLine(string line)

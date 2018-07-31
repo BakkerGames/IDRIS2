@@ -1,4 +1,4 @@
-﻿// RunCadol.cs - 07/20/2018
+﻿// RunCadol.cs - 07/31/2018
 
 using System;
 
@@ -13,20 +13,32 @@ namespace IDRIS.Runtime
 
         public static void Run()
         {
+            long prognum;
+            long linenum;
             while (true)
             {
-                _lineText = ILCode.GetLine(Mem.GetByte(MemPos.prog), Mem.GetNum(MemPos.progline, 2));
-                Console.WriteLine($"{Mem.GetByte(MemPos.prog).ToString("000")}:{Mem.GetNum(MemPos.progline, 2).ToString("0000")} {_lineText}"); // todo
+                // get current program and line
+                prognum = Mem.GetByte(MemPos.prog);
+                linenum = Mem.GetNum(MemPos.progline, 2);
+                // do debug events as needed
+                Debug.RaiseProgLine(prognum, linenum);
+                if (Debug.HasBreakpoint(prognum, linenum))
+                {
+                    Debug.RaiseBreakpoint(prognum, linenum);
+                }
+                // handle current line
+                _lineText = ILCode.GetLine(prognum, linenum);
                 _tokens = _lineText.Split('\t');
                 _tokenCount = _tokens.GetUpperBound(0) + 1;
                 _tokenNum = 0;
                 if (Functions.IsNumber(_tokens[_tokenNum]))
                 {
-                    _tokenNum++;
+                    _tokenNum++; // line number
                 }
-                Mem.SetNum(MemPos.progline, 2, Mem.GetNum(MemPos.progline, 2) + 1); // move to next line
                 try
                 {
+                    // move to next line in preparation, could be changed by command
+                    Mem.SetNum(MemPos.progline, 2, linenum + 1);
                     ExecuteLine();
                 }
                 catch (Exception ex)
@@ -34,7 +46,6 @@ namespace IDRIS.Runtime
                     Console.WriteLine(ex.Message);
                     throw;
                 }
-                Console.ReadLine(); // todo
             }
         }
 

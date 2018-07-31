@@ -43,9 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="GosubStack.cs" />
     <Compile Include="ILCode.cs" />
+    <Compile Include="Debug.Breakpoint.cs" />
     <Compile Include="Keyboard.cs" />
     <Compile Include="Mem.Alpha.cs" />
     <Compile Include="Mem.Bool.cs" />
