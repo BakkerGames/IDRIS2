@@ -1,7 +1,8 @@
-﻿// Keyboard.cs - 07/13/2018
+﻿// Keyboard.cs - 09/28/2018
 
-using System;
 using System.Collections;
+using System.Text;
+using System.Windows.Forms;
 
 namespace IDRIS.Runtime
 {
@@ -22,11 +23,41 @@ namespace IDRIS.Runtime
 
         public static char GetChar()
         {
-            if (_kbd.Count <=0)
+            while (_kbd.Count == 0)
             {
-                throw new SystemException("keyboard buffer underflow");
+                Application.DoEvents();
             }
             return (char)_kbd.Dequeue();
+        }
+
+        public static string GetEnteredString(long maxLen)
+        {
+            StringBuilder result = new StringBuilder();
+            char c;
+            do
+            {
+                c = GetChar();
+                switch ((int)c)
+                {
+                    case 13: // enter
+                        break;
+                    case 8: // backspace
+                        if (result.Length > 0)
+                        {
+                            result.Length--;
+                            Screen.BackSpace();
+                        }
+                        break;
+                    default:
+                        if (result.Length < maxLen)
+                        {
+                            result.Append(c);
+                            Screen.Display(c.ToString());
+                        }
+                        break;
+                }
+            } while (c != 13);
+            return result.ToString();
         }
     }
 }

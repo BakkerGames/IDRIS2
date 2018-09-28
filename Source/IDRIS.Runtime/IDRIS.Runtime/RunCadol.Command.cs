@@ -1,4 +1,4 @@
-﻿// RunCadol.Command.cs - 07/31/2018
+﻿// RunCadol.Command.cs - 09/28/2018
 
 using System;
 
@@ -13,7 +13,8 @@ namespace IDRIS.Runtime
             switch (_tokens[_tokenNum++])
             {
                 case "ATT":
-                    Console.WriteLine("### ATT"); // todo
+                    long att = GetNumericValue();
+                    Screen.SetAttrib(att);
                     break;
                 case "BACK":
                     Screen.Back();
@@ -56,7 +57,19 @@ namespace IDRIS.Runtime
                     Screen.Display(tempAlpha);
                     break;
                 case "ENTERALPHA":
-                    Console.WriteLine("### ENTERALPHA"); // todo
+                    if (_tokens[_tokenNum++] != "(")
+                    {
+                        Console.WriteLine("invalid ENTERALPHA format");
+                        break;
+                    }
+                    tempNum = GetNumericExpression();
+                    if (_tokens[_tokenNum++] != ")")
+                    {
+                        Console.WriteLine("invalid ENTERALPHA format");
+                        break;
+                    }
+                    tempAlpha = Keyboard.GetEnteredString(tempNum);
+                    //todo handle entered alpha string
                     break;
                 case "ESC":
                 case "ESCAPE":

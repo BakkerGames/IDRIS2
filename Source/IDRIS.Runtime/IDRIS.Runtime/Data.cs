@@ -1,4 +1,4 @@
-﻿// data.cs - 07/13/2018
+﻿// data.cs - 09/28/2018
 
 namespace IDRIS.Runtime
 {
@@ -13,37 +13,37 @@ namespace IDRIS.Runtime
 
         public static bool Read()
         {
-            // todo
+            // todo Read()
             return false;
         }
 
         public static bool ReadKey()
         {
-            // todo
+            // todo ReadKey()
             return false;
         }
 
         public static bool ReadRec()
         {
-            // todo
+            // todo ReadRec()
             return false;
         }
 
         public static bool Write()
         {
-            // todo
+            // todo Write()
             return false;
         }
 
         public static bool WriteRec()
         {
-            // todo
+            // todo WriteRec()
             return false;
         }
 
         public static void WriteBack()
         {
-            // todo
+            // todo WriteBack()
         }
     }
 }

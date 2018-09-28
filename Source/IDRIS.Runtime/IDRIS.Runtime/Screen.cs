@@ -1,4 +1,4 @@
-﻿// screen.cs - 07/31/2019
+﻿// screen.cs - 09/28/2018
 
 using System;
 
@@ -14,6 +14,7 @@ namespace IDRIS.Runtime
         private static long _cursorx = 0;
         private static long _cursory = 0;
         private static bool _graphics = false;
+        private static int _spaceChar = 32;
 
         public static void Reset()
         {
@@ -21,7 +22,7 @@ namespace IDRIS.Runtime
             {
                 for (int x = 0; x < _width; x++)
                 {
-                    _screen[y * _width + x] = 32;
+                    _screen[y * _width + x] = _spaceChar;
                     _attrib[y * _width + x] = -1;
                 }
             }
@@ -33,6 +34,22 @@ namespace IDRIS.Runtime
         internal static void Back()
         {
             throw new NotImplementedException();
+        }
+
+        internal static void BackSpace()
+        {
+            _cursorx--;
+            if (_cursorx < 0)
+            {
+                _cursorx += _width;
+                _cursory--;
+                if (_cursory < 0)
+                {
+                    _cursory = 0;
+                    _cursorx = 0;
+                }
+            }
+            _screen[_cursory * _width + _cursorx] = _spaceChar;
         }
 
         public static void Clear()
@@ -50,7 +67,7 @@ namespace IDRIS.Runtime
                     {
                         if ((lastAtt / 2) % 2 == 0)
                         {
-                            _screen[y * _width + x] = 32;
+                            _screen[y * _width + x] = _spaceChar;
                         }
                     }
                 }
@@ -153,13 +170,13 @@ namespace IDRIS.Runtime
             throw new NotImplementedException();
         }
 
-        public static void SetAttrib(int value)
+        public static void SetAttrib(long value)
         {
             if (value < 0 || value > 16 || value % 2 != 0)
             {
                 throw new SystemException($"setattrib({value}) - invalid attribute");
             }
-            _attrib[_cursory * _width + _cursorx] = value;
+            _attrib[_cursory * _width + _cursorx] = (int)value;
             IncrementCursor();
         }
 
