@@ -40,14 +40,17 @@ namespace IDRIS.Runtime
                     Screen.CursorAt(-1, 0);
                     break;
                 case "CURSORAT":
-                    long y = GetNumericValue();
-                    if (_tokens[_tokenNum++] != ",")
-                    {
-                        Console.WriteLine("invalid CURSORAT format");
-                        break;
-                    }
-                    long x = GetNumericValue();
-                    Screen.CursorAt(y, x);
+                    NumExpr y = BuildNumericExpression();
+                    CheckToken(",");
+                    NumExpr x = BuildNumericExpression();
+                    //long y = GetNumericValue();
+                    //if (_tokens[_tokenNum++] != ",")
+                    //{
+                    //    Console.WriteLine("invalid CURSORAT format");
+                    //    break;
+                    //}
+                    //long x = GetNumericValue();
+                    Screen.CursorAt(y.GetValue(), x.GetValue());
                     break;
                 case "DCH":
                     Console.WriteLine("### dch");
