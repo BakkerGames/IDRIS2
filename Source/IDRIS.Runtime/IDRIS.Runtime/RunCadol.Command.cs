@@ -1,4 +1,4 @@
-﻿// RunCadol.Command.cs - 09/28/2018
+﻿// RunCadol.Command.cs - 12/31/2018
 
 using System;
 
@@ -40,17 +40,10 @@ namespace IDRIS.Runtime
                     Screen.CursorAt(-1, 0);
                     break;
                 case "CURSORAT":
-                    NumExpr y = BuildNumericExpression();
+                    long y = GetNumericValue();
                     CheckToken(",");
-                    NumExpr x = BuildNumericExpression();
-                    //long y = GetNumericValue();
-                    //if (_tokens[_tokenNum++] != ",")
-                    //{
-                    //    Console.WriteLine("invalid CURSORAT format");
-                    //    break;
-                    //}
-                    //long x = GetNumericValue();
-                    Screen.CursorAt(y.GetValue(), x.GetValue());
+                    long x = GetNumericValue();
+                    Screen.CursorAt(y, x);
                     break;
                 case "DCH":
                     Console.WriteLine("### dch");
@@ -222,6 +215,19 @@ namespace IDRIS.Runtime
                     Console.WriteLine($"Error: Unknown command {_tokens[_tokenNum - 1]}");
                     break;
             }
+        }
+
+        private static void CheckToken(string checkValue)
+        {
+            if (_tokenNum >= _tokenCount)
+            {
+                throw new SystemException("TokenNum past eol");
+            }
+            if (!_tokens[_tokenNum].Equals(checkValue))
+            {
+                throw new SystemException($"Token does not match: '{_tokens[_tokenNum]}' - '{checkValue}'");
+            }
+            _tokenNum++;
         }
     }
 }
