@@ -50,7 +50,7 @@
     <StartupObject>IDRIS.Debug.Winform.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>813B8AD510D8B58851CE314EA1FB47A8C561921D</ManifestCertificateThumbprint>
@@ -59,10 +59,11 @@
     <ManifestKeyFile>Security\CodeSigning.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Security\CodeSigning.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\CDS Icon.ico</ApplicationIcon>
@@ -104,7 +105,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Security\CodeSigning.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -123,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\CDS Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Security\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
