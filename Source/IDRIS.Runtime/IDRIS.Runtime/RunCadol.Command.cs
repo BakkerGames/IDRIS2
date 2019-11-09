@@ -53,17 +53,19 @@ namespace IDRIS.Runtime
                     Screen.Display(tempAlpha);
                     break;
                 case "ENTERALPHA":
-                    if (_tokens[_tokenNum++] != "(")
-                    {
-                        Console.WriteLine("invalid ENTERALPHA format");
-                        break;
-                    }
+                    CheckToken("(");
+                    //if (_tokens[_tokenNum++] != "(")
+                    //{
+                    //    Console.WriteLine("invalid ENTERALPHA format");
+                    //    break;
+                    //}
                     tempNum = GetNumericExpression();
-                    if (_tokens[_tokenNum++] != ")")
-                    {
-                        Console.WriteLine("invalid ENTERALPHA format");
-                        break;
-                    }
+                    CheckToken(")");
+                    //if (_tokens[_tokenNum++] != ")")
+                    //{
+                    //    Console.WriteLine("invalid ENTERALPHA format");
+                    //    break;
+                    //}
                     tempAlpha = Keyboard.GetEnteredString(tempNum);
                     //todo handle entered alpha string
                     break;
